@@ -1,0 +1,20 @@
+
+##
+# The Compute capability for your NVIDIA GPU can be found on the wiki page.
+# Wiki page: https://en.wikipedia.org/wiki/CUDA
+#
+# Edit accordingly to match your GPU. This file is ignored from GIT updates.
+##
+
+# cudaarch="compute_61"  # Pascal
+# cudacode="sm_61"
+
+# cudaarch="compute_72"  # Volta
+# cudacode="sm_72"
+
+  cudaarch="compute_75"  # Turing
+  cudacode="sm_75"
+
+# cudaarch="compute_86"  # Ampere
+# cudacode="sm_86"
+

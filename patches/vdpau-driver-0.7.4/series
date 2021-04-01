@@ -1,0 +1,9 @@
+cast.patch
+GL-version-1_3.patch
+libva-constants.patch
+sigfpe-crash.patch
+fallback-x.patch
+implement-vaquerysurfaceattributes.patch
+vp9-support.patch
+implement-vacreatesurfaces2.patch
+add-missing-headers.patch

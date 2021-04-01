@@ -1,0 +1,21 @@
+Description: Remove constants dropped from VA API
+Origin: upstream,
+ http://lists.freedesktop.org/archives/libva/2013-June/001762.html
+Last-Update: 2014-05-09
+
+diff --git a/src/vdpau_dump.c b/src/vdpau_dump.c
+index 899888b..610e7cd 100644
+--- a/src/vdpau_dump.c
++++ b/src/vdpau_dump.c
+@@ -59,8 +59,6 @@ const char *string_of_VABufferType(VABufferType type)
+         _(VAEncSequenceParameterBufferType);
+         _(VAEncPictureParameterBufferType);
+         _(VAEncSliceParameterBufferType);
+-        _(VAEncH264VUIBufferType);
+-        _(VAEncH264SEIBufferType);
+ #endif
+ #if VA_CHECK_VERSION(0,31,1)
+         _(VAQMatrixBufferType);
+-- 
+1.7.9.5
+

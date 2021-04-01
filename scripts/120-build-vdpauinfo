@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Exit silently if the graphics driver is not installed.
+[[ ! -f /opt/nvidia/bin/nvidia-settings ]] && exit 0
+
+name=vdpauinfo
+echo "building ${name}"
+
+mkdir -p builddir && cd builddir
+rm -fr ${name}
+
+if [[ ! -f ${name}.tar.gz ]]; then
+    url="https://gitlab.freedesktop.org/vdpau/${name}.git"
+    echo "git clone --depth 1 ${url}"
+    git clone --depth 1 ${url}
+    tar czf ${name}.tar.gz ${name}
+else
+    tar xzf ${name}.tar.gz
+fi
+
+if [[ -d ${name} ]]; then
+    cd ${name}
+    ./autogen.sh --prefix=/usr/local && \
+    make && make install
+fi
+

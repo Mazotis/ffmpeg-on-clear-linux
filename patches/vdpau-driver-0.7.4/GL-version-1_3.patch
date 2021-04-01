@@ -1,0 +1,23 @@
+Description: Define PFNGLMULTITEXCOORD2FPROC if it is missing
+Origin: vendor, http://bazaar.launchpad.net/~ubuntu-branches/ubuntu/trusty/vdpau-video/trusty/view/head:/debian/patches/GL_VER_1_3.patch
+Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=713612
+Last-Update: 2014-05-09
+
+diff --git a/src/utils_glx.h b/src/utils_glx.h
+index f753780..e02cedc 100644
+--- a/src/utils_glx.h
++++ b/src/utils_glx.h
+@@ -48,6 +48,13 @@ typedef void (*PFNGLXBINDTEXIMAGEEXTPROC)(Display *, GLXDrawable, int, const int
+ typedef void (*PFNGLXRELEASETEXIMAGEEXTPROC)(Display *, GLXDrawable, int);
+ #endif
+ 
++#if GL_GLEXT_VERSION >= 85
++/* XXX: PFNGLMULTITEXCOORD2FPROC got out of the GL_VERSION_1_3_DEPRECATED
++   block and is not defined if GL_VERSION_1_3 is defined in <GL/gl.h>
++   Redefine the type here as an interim solution */
++typedef void (*PFNGLMULTITEXCOORD2FPROC) (GLenum target, GLfloat s, GLfloat t);
++#endif
++
+ #ifndef GL_FRAMEBUFFER_BINDING
+ #define GL_FRAMEBUFFER_BINDING GL_FRAMEBUFFER_BINDING_EXT
+ #endif

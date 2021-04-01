@@ -1,0 +1,30 @@
+#!/bin/bash
+
+name=dav1d
+branch=0.8.2
+echo "building ${name} branch ${branch}"
+
+mkdir -p builddir && cd builddir
+rm -fr ${name}
+
+if [[ ! -f ${name}.tar.gz ]]; then
+    url="https://code.videolan.org/videolan/${name}.git"
+    echo "git clone --depth 1 --branch ${branch} ${url}"
+    git clone --depth 1 --branch ${branch} ${url}
+    tar czf ${name}.tar.gz ${name}
+else
+    tar xzf ${name}.tar.gz
+fi
+
+if [[ -d ${name} ]]; then
+    mkdir -p ${name}/build && cd ${name}/build
+    meson setup \
+        -Denable_asm=true \
+        -Denable_examples=false \
+        -Denable_tests=false \
+        -Denable_tools=false \
+        -Dtestdata_tests=false \
+        --buildtype=release .. --prefix=/usr/local --libdir=lib && \
+    ninja && ninja install
+fi
+

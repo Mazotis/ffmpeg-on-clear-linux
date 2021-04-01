@@ -1,0 +1,38 @@
+#!/bin/bash
+# Usage: ./000-install-dependencies
+
+# Extract installed bundles; append space to the end of each line.
+installed_bundles=`swupd bundle-list | grep '^ - ' | sed 's/$/ /g'`
+
+add_list=""
+count=0
+
+for bundle_name in \
+    c-basic dev-utils nasm yasm sysadmin-basic devpkg-alsa-lib    \
+    devpkg-appstream-glib devpkg-bzip2 devpkg-fontconfig          \
+    devpkg-fribidi devpkg-freetype devpkg-gnutls devpkg-libass    \
+    devpkg-libdrm devpkg-libgcrypt devpkg-libjpeg-turbo           \
+    devpkg-libogg devpkg-librsvg devpkg-libtheora devpkg-libva    \
+    devpkg-libvorbis devpkg-libvpx devpkg-libwebp devpkg-libX11   \
+    devpkg-libxcb devpkg-libxml2 devpkg-libXvMC devpkg-mediasdk   \
+    devpkg-mesa devpkg-numactl devpkg-opus devpkg-pulseaudio      \
+    devpkg-SDL2 devpkg-SDL2_gfx devpkg-SDL2_image devpkg-SDL2_net \
+    devpkg-SDL2_ttf devpkg-speex devpkg-v4l-utils devpkg-zlib     \
+;do
+    if [[ ! ${installed_bundles} =~ " - ${bundle_name} " ]]; then
+        add_list="${add_list} ${bundle_name}"
+    else
+        count=$(( ${count} + 1 ))
+    fi
+done
+
+if [[ -n ${add_list} ]]; then
+    add_list=${add_list## } # remove leading whitespace
+    echo "swupd bundle-add ${add_list}"
+    swupd bundle-add ${add_list}
+fi
+
+if [[ ${count} -gt 0 ]]; then
+    echo "${count} bundles were already installed"
+fi
+

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+name="vmaf-2.1.1"
+echo "building ${name}"
+
+mkdir -p builddir && cd builddir
+rm -fr ${name}
+
+if [[ ! -f ${name}.tar.gz ]]; then
+    url="https://github.com/Netflix/vmaf/archive/v2.1.1.tar.gz"
+    echo "curl -LO ${url}"
+    curl -LO ${url}
+    mv v2.1.1.tar.gz ${name}.tar.gz
+fi
+
+tar xzf ${name}.tar.gz
+
+if [[ -d ${name} ]]; then
+    mkdir -p ${name}/libvmaf/build && cd ${name}/libvmaf/build
+    meson setup \
+        -Denable_tests=false \
+        -Denable_docs=false \
+        -Ddefault_library=shared \
+        --buildtype=release .. --prefix=/usr/local --libdir=lib && \
+    ninja && ninja install
+fi
+

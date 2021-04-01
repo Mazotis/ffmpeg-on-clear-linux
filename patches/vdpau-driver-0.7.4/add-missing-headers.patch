@@ -1,0 +1,12 @@
+Index: vdpau-video-0.7.4/src/vdpau_video.h
+===================================================================
+--- vdpau-video-0.7.4.orig/src/vdpau_video.h
++++ vdpau-video-0.7.4/src/vdpau_video.h
+@@ -23,6 +23,7 @@
+ 
+ #include "vdpau_driver.h"
+ #include "vdpau_decode.h"
++#include <linux/videodev2.h>
+ 
+ typedef struct SubpictureAssociation *SubpictureAssociationP;
+ struct SubpictureAssociation {

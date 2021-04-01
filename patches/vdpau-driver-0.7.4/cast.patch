@@ -1,0 +1,19 @@
+Description: Cast to the correct type
+ A patch in libvdpau 0.7-2 changes the definition of VdpPictureInfo, so we need
+ to adopt the cast here.
+Author: Sebastian Ramacher <sramacher@debian.org>
+Last-Update: 2014-05-09
+
+diff --git a/src/vdpau_decode.c b/src/vdpau_decode.c
+index 4a402d7..20bd897 100644
+--- a/src/vdpau_decode.c
++++ b/src/vdpau_decode.c
+@@ -1289,7 +1289,7 @@ vdpau_EndPicture(
+             driver_data,
+             obj_context->vdp_decoder,
+             obj_surface->vdp_surface,
+-            (VdpPictureInfo)&obj_context->vdp_picture_info,
++            (VdpPictureInfo*)&obj_context->vdp_picture_info,
+             obj_context->vdp_bitstream_buffers_count,
+             obj_context->vdp_bitstream_buffers
+         );

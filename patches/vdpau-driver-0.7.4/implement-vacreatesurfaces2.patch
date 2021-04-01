@@ -1,0 +1,89 @@
+commit dabc0096531c5052d49ac3291a6051f53aff3e31
+Author: Andrew Matteson <xt.knight@gmail.com>
+Date:   Wed Apr 15 09:09:55 2020 +0900
+
+    Add vdpau_CreateSurfaces2 function (Issue #5 - thanks all)
+
+Index: vdpau-video-0.7.4/src/vdpau_driver_template.h
+===================================================================
+--- vdpau-video-0.7.4.orig/src/vdpau_driver_template.h
++++ vdpau-video-0.7.4/src/vdpau_driver_template.h
+@@ -452,6 +452,19 @@ struct VA_DRIVER_VTABLE {
+                 void **buffer
+         );
+ #endif
++
++        VAStatus
++        (*vaCreateSurfaces2)(
++            VADriverContextP    ctx,
++            unsigned int        format,
++            unsigned int        width,
++            unsigned int        height,
++            VASurfaceID        *surfaces,
++            unsigned int        num_surfaces,
++            VASurfaceAttrib    *attrib_list,
++            unsigned int        num_attribs
++        );
++
+ };
+ 
+ /* Driver context */
+@@ -662,7 +675,7 @@ static VAStatus FUNC(Initialize)(VA_DRIV
+     vtable->vaDbgCopySurfaceToBuffer        = vdpau_DbgCopySurfaceToBuffer;
+ #endif
+ #endif
+-
++    vtable->vaCreateSurfaces2               = vdpau_CreateSurfaces2;
+ #if VA_INIT_GLX
+     VA_DRIVER_VTABLE_GLX_P const glx_vtable = FUNC(GetVTableGLX)(ctx);
+     if (!glx_vtable)
+Index: vdpau-video-0.7.4/src/vdpau_video.c
+===================================================================
+--- vdpau-video-0.7.4.orig/src/vdpau_video.c
++++ vdpau-video-0.7.4/src/vdpau_video.c
+@@ -500,6 +500,21 @@ vdpau_CreateSurfaces(
+     }
+     return va_status;
+ }
++// vaCreateSurfaces2
++VAStatus
++vdpau_CreateSurfaces2(
++    VADriverContextP    ctx,
++    unsigned int        format,
++    unsigned int        width,
++    unsigned int        height,
++    VASurfaceID         *surfaces,
++    unsigned int        num_surfaces,
++    VASurfaceAttrib     *attrib_list,
++    unsigned int        num_attribs
++)
++{
++    return vdpau_CreateSurfaces(ctx, width, height, format, num_surfaces, surfaces); 
++}
+ 
+ // vaDestroyContext
+ VAStatus vdpau_DestroyContext(VADriverContextP ctx, VAContextID context)
+Index: vdpau-video-0.7.4/src/vdpau_video.h
+===================================================================
+--- vdpau-video-0.7.4.orig/src/vdpau_video.h
++++ vdpau-video-0.7.4/src/vdpau_video.h
+@@ -186,6 +186,19 @@ vdpau_CreateSurfaces(
+     VASurfaceID        *surfaces
+ ) attribute_hidden;
+ 
++// vaCreateSurfaces2
++VAStatus
++vdpau_CreateSurfaces2(
++    VADriverContextP    ctx,
++    unsigned int        format,
++    unsigned int        width,
++    unsigned int        height,
++    VASurfaceID        *surfaces,
++    unsigned int        num_surfaces,
++    VASurfaceAttrib    *attrib_list,
++    unsigned int        num_attribs
++) attribute_hidden;
++
+ // vaDestroySurfaces
+ VAStatus
+ vdpau_DestroySurfaces(

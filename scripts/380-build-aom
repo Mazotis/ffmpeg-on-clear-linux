@@ -1,0 +1,47 @@
+#!/bin/bash
+
+name=aom
+branch=v3.0.0
+echo "building ${name} branch ${branch}"
+
+mkdir -p builddir && cd builddir
+rm -fr ${name} ${name}_build
+
+if [[ ! -f ${name}.tar.gz ]]; then
+    url="https://aomedia.googlesource.com/aom"
+    echo "git clone --depth 1 --branch ${branch} ${url}"
+    git clone --depth 1 --branch ${branch} ${url}
+    tar czf ${name}.tar.gz ${name}
+else
+    tar xzf ${name}.tar.gz
+fi
+
+if [[ ! -f /usr/local/lib/pkgconfig/libvmaf.pc ]]; then
+    echo "Error: Build vmaf first before aom."
+    exit 1
+fi
+
+if [[ -d ${name} ]]; then
+    mkdir -p ${name}_build && cd ${name}_build
+    export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+    export LD_LIBRARY_PATH=/usr/local/lib
+    cmake -G Ninja \
+        -DCMAKE_INSTALL_PREFIX=/usr/local \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=1 \
+        -DBUILD_SHARED_LIBS=1 \
+        -DCONFIG_PIC=1 \
+        -DCONFIG_SHARED=1 \
+        -DCONFIG_ANALYZER=0 \
+        -DENABLE_DOCS=0 \
+        -DENABLE_EXAMPLES=0 \
+        -DENABLE_NASM=1 \
+        -DENABLE_TESTS=0 \
+        -DENABLE_TOOLS=0 \
+        -DCONFIG_TUNE_VMAF=1 \
+        -DCONFIG_WEBM_IO=1 \
+        -DCMAKE_BUILD_TYPE=Release ../aom && \
+    ninja && ninja install && \
+    rm -f /usr/local/lib/libaom.a
+fi
+

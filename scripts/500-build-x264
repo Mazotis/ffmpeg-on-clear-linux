@@ -1,0 +1,48 @@
+#!/bin/bash
+
+name=x264
+echo "building ${name}"
+
+mkdir -p builddir && cd builddir
+rm -fr ${name} ${name}-generic10 ${name}-generic
+
+if [[ ! -f ${name}.tar.gz ]]; then
+    url="https://code.videolan.org/videolan/x264.git"
+    echo "git clone --depth 1 ${url}"
+    git clone --depth 1 ${url}
+    tar czf ${name}.tar.gz ${name}
+else
+    tar xzf ${name}.tar.gz
+fi
+
+if [[ -d ${name} ]]; then
+    cores=`grep -c '^cpu[0-9]' /proc/stat`
+    cp -a ${name} ${name}-generic10
+    mv ${name} ${name}-generic
+
+    echo "Building the ${name} 10-bit shared library..."
+    cd ${name}-generic10
+
+    ./configure --prefix=/usr/local --extra-cflags="-I/usr/local/include" \
+        --extra-ldflags="-L/usr/local/lib" --enable-lto --enable-shared \
+        --enable-pic --enable-strip --disable-lavf --disable-swscale \
+        --disable-ffms --disable-opencl --disable-cli --bit-depth=10 && \
+    make -j ${cores} || exit $?
+    make install || exit $?
+
+    version=`ls -1tr /usr/local/lib/libx264.so.* | tail -1 | cut -f3 -d.`
+    rm -f /usr/local/lib/libx264.so /usr/local/lib/libx26410b.so.$version
+    mv -f /usr/local/lib/libx264.so.$version /usr/local/lib/libx26410b.so.$version
+    pushd /usr/local/lib && ln -sf libx26410b.so.$version libx26410b.so && popd
+    unset version
+
+    echo "Building the ${name} 8-bit shared library and cli tools..."
+    cd ../${name}-generic
+
+    ./configure --prefix=/usr/local --extra-cflags="-I/usr/local/include" \
+        --extra-ldflags="-L/usr/local/lib" --enable-lto --enable-shared \
+        --enable-pic --enable-strip --disable-lavf --disable-swscale \
+        --disable-ffms --disable-opencl && \
+    make -j ${cores} && make install
+fi
+

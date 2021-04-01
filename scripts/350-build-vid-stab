@@ -1,0 +1,28 @@
+#!/bin/bash
+
+name=vid.stab
+echo "building ${name}"
+
+mkdir -p builddir && cd builddir
+rm -fr ${name}
+
+if [[ ! -f ${name}.tar.gz ]]; then
+    url="https://github.com/georgmartius/${name}.git"
+    echo "git clone --depth 1 ${url}"
+    git clone --depth 1 ${url}
+    tar czf ${name}.tar.gz ${name}
+else
+    tar xzf ${name}.tar.gz
+fi
+
+if [[ -d ${name} ]]; then
+    cd ${name}
+    cmake -B build -G Ninja \
+        -DCMAKE_INSTALL_PREFIX=/usr/local \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=1 \
+        -DCMAKE_SKIP_RPATH:BOOL=YES \
+        -DCMAKE_BUILD_TYPE=Release . && \
+    ninja -C build && ninja -C build install
+fi
+

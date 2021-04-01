@@ -1,0 +1,26 @@
+#!/bin/bash
+
+name=opus
+echo "building ${name}"
+
+mkdir -p builddir && cd builddir
+rm -fr ${name}
+
+if [[ ! -f ${name}.tar.gz ]]; then
+    url="https://github.com/xiph/${name}.git"
+    echo "git clone --depth 1 ${url}"
+    git clone --depth 1 ${url}
+    tar czf ${name}.tar.gz ${name}
+else
+    tar xzf ${name}.tar.gz
+fi
+
+if [[ -d ${name} ]]; then
+    cores=`grep -c '^cpu[0-9]' /proc/stat`
+    cd ${name}
+    ./autogen.sh && \
+    ./configure --prefix=/usr/local --enable-shared && \
+    make -j ${cores} && make install && \
+    rm -f /usr/local/lib/libopus.la /usr/local/lib/libopus.a
+fi
+

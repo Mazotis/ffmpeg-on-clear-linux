@@ -1,0 +1,30 @@
+#!/bin/bash
+
+name=SVT-AV1
+echo "building ${name}"
+
+mkdir -p builddir && cd builddir
+rm -fr ${name}
+
+if [[ ! -f ${name}.tar.gz ]]; then
+    url="https://gitlab.com/AOMediaCodec/${name}.git"
+    echo "git clone --depth 1 ${url}"
+    git clone --depth 1 ${url}
+    tar czf ${name}.tar.gz ${name}
+else
+    tar xzf ${name}.tar.gz
+fi
+
+if [[ -d ${name} ]]; then
+    cd ${name}
+    # Only the encoder is supported by FFmpeg, so the decoder is disabled.
+    cmake -B build -G Ninja \
+        -DBUILD_DEC=0 \
+        -DCMAKE_INSTALL_PREFIX=/usr/local \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=1 \
+        -DCMAKE_SKIP_RPATH:BOOL=YES \
+        -DCMAKE_BUILD_TYPE=Release . && \
+    ninja -C build && ninja -C build install
+fi
+
