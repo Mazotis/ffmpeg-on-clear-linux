@@ -99,7 +99,7 @@ export MOZ_ACCELERATED=1
 export MOZ_USE_XINPUT2=1
 export MOZ_WEBRENDER=1
 
-export LD_LIBRARY_PATH=/usr/local/lib
+export LD_LIBRARY_PATH=/usr/local/lib:/opt/nvidia/lib64
 ```
 
 ## Firefox Settings
