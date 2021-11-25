@@ -1,7 +1,7 @@
 # ffmpeg-on-clear-linux
 Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) including H.264 and vp9 hardware acceleration in Firefox.
 
-This is an automation How-To repository for building FFmpeg and minimum dependencies. My motivation is wanting hardware acceleration in Firefox. Thank you, @xtknight for the vp9 acceleration bits.
+This is an automation How-To repository for building FFmpeg and minimum dependencies. My motivation is wanting hardware acceleration in Firefox. Thank you, @xtknight for the [vp9](https://github.com/xtknight/vdpau-va-driver-vp9) acceleration bits.
 
 ## What's Included
 ```text
@@ -82,7 +82,6 @@ The following is my Firefox config (running XOrg). Adjust LIBVA and VDPAU variab
 ```bash
 export MOZ_ENABLE_WAYLAND=1
 ```
-
 
 ```bash
 $ cat ~/.config/firefox.conf
