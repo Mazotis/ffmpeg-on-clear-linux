@@ -86,7 +86,7 @@ export MOZ_ENABLE_WAYLAND=1
 ```bash
 $ cat ~/.config/firefox.conf
 
-export LD_LIBRARY_PATH=/usr/local/lib:/opt/nvidia/lib64
+export LD_LIBRARY_PATH=/opt/nvidia/lib64:/usr/local/lib
 
 export LIBVA_DRIVERS_PATH=/usr/lib64/dri
 export LIBVA_DRIVER_NAME=vdpau
@@ -104,25 +104,29 @@ export MOZ_WEBRENDER=1
 ## Firefox Settings
 Please find the minimum settings applied via ```about:config``` to enable hardware acceleration. The ```media.rdd-ffmpeg.enable``` setting must be enabled for h264ify to work with FFmpeg also supporting vp9. Basically, choose to play videos via the h264ify extension or the vp9 format by disabling h264ify and enjoy beyond 1080P playback.
 ```text
-gfx.webrender.all                            true
-gfx.webrender.enabled                        true
-gfx.canvas.azure.accelerated                 true
+gfx.webrender.all                              true
+gfx.webrender.enabled                          true
+gfx.canvas.azure.accelerated                   true
 
 No need to set if missing or set false or click on the trash icon
-gfx.xrender.enabled                          false
+gfx.xrender.enabled                            false
 
-layers.acceleration.force-enabled            false
-layers.omtp.enable                           true
+layers.acceleration.force-enabled              false
+layers.omtp.enable                             true
 
-media.ffmpeg.dmabuf-textures.enabled         true
-media.ffmpeg.vaapi-drm-display.enabled       true
-media.ffmpeg.vaapi.enabled                   true
-media.ffvpx.enabled                          false
+media.ffmpeg.dmabuf-textures.enabled           true
+media.ffmpeg.vaapi-drm-display.enabled         true
+media.ffmpeg.vaapi.enabled                     true
+media.ffvpx.enabled                            false
 
-media.rdd-ffmpeg.enabled                     true
-media.rdd-ffvpx.enabled                      false
-media.rdd-vpx.enabled                        false
-media.av1.enabled                            false
+media.rdd-ffmpeg.enabled                       true
+media.rdd-ffvpx.enabled                        false
+media.rdd-process.enabled                      false
+media.rdd-vpx.enabled                          false
+media.av1.enabled                              false
+
+Enable FFMPEG VA-API decoding support for WebRTC on Linux
+media.navigator.mediadatadecoder_vpx_enabled   true
 ```
 
 To play HDR videos, see ```youtube-play``` found in the extras folder.
