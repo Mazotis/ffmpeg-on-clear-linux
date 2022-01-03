@@ -78,10 +78,7 @@ yuv444p12le gbrp12le gray gray10le gray12le
 ```
 
 ## Firefox Config
-The following is my Firefox config (running XOrg). Adjust LIBVA and VDPAU variables accordingly for Intel or AMD GPUs. If running Wayland, replace ```MOZ_DISABLE_WAYLAND``` and ```MOZ_X11_EGL``` with:
-```bash
-export MOZ_ENABLE_WAYLAND=1
-```
+The following is my Firefox config (running XOrg). Adjust LIBVA and VDPAU variables accordingly for Intel or AMD GPUs.
 
 ```bash
 $ cat ~/.config/firefox.conf
@@ -92,8 +89,13 @@ export LIBVA_DRIVERS_PATH=/usr/lib64/dri
 export LIBVA_DRIVER_NAME=vdpau
 export VDPAU_DRIVER=nvidia
 
-export MOZ_DISABLE_WAYLAND=1
-export MOZ_X11_EGL=1
+if [ $XDG_SESSION_TYPE == wayland ]
+then
+	export MOZ_ENABLE_WAYLAND=1
+elif [ $XDG_SESSION_TYPE == x11 ]
+	export MOZ_DISABLE_WAYLAND=1
+	export MOZ_X11_EGL=1
+fi
 
 export MOZ_ACCELERATED=1
 export MOZ_DISABLE_RDD_SANDBOX=1
