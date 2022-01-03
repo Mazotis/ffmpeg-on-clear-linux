@@ -90,6 +90,7 @@ export LIBVA_DRIVER_NAME=vdpau
 export VDPAU_DRIVER=nvidia
 
 if [ $XDG_SESSION_TYPE == wayland ]
+then
 	export MOZ_ENABLE_WAYLAND=1
 elif [ $XDG_SESSION_TYPE == x11 ]
 	export MOZ_DISABLE_WAYLAND=1
