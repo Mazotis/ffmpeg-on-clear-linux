@@ -89,12 +89,11 @@ export LIBVA_DRIVERS_PATH=/usr/lib64/dri
 export LIBVA_DRIVER_NAME=vdpau
 export VDPAU_DRIVER=nvidia
 
-if [ $XDG_SESSION_TYPE == wayland ]
-then
-	export MOZ_ENABLE_WAYLAND=1
+if [ $XDG_SESSION_TYPE == wayland ]; then
+    export MOZ_ENABLE_WAYLAND=1
 elif [ $XDG_SESSION_TYPE == x11 ]
-	export MOZ_DISABLE_WAYLAND=1
-	export MOZ_X11_EGL=1
+    export MOZ_DISABLE_WAYLAND=1
+    export MOZ_X11_EGL=1
 fi
 
 export MOZ_ACCELERATED=1
@@ -117,7 +116,6 @@ No need to set if missing or set false or click on the trash icon
 gfx.xrender.enabled                            false
 
 layers.acceleration.force-enabled              false
-layers.omtp.enable                             true
 
 media.ffmpeg.dmabuf-textures.enabled           true
 media.ffmpeg.vaapi-drm-display.enabled         true
