@@ -109,10 +109,11 @@ gfx.canvas.azure.accelerated                   true
 gfx.webrender.all                              true
 gfx.webrender.enabled                          true
 
-To use CPU instead of GPU
+Enable software if you prefer to render on the CPU instead of GPU.
 gfx.webrender.software                         true
 
-No need to set if missing or set false or click on the trash icon
+Do not add xrender if missing or set to false or click on the trash icon.
+This is a legacy setting that shouldn't be used as it disables WebRender.
 gfx.xrender.enabled                            false
 
 layers.acceleration.force-enabled              false
@@ -128,7 +129,7 @@ media.rdd-process.enabled                      false
 media.rdd-vpx.enabled                          false
 media.av1.enabled                              false
 
-Enable FFMPEG VA-API decoding support for WebRTC on Linux
+Enable FFMPEG VA-API decoding support for WebRTC on Linux.
 media.navigator.mediadatadecoder_vpx_enabled   true
 ```
 
