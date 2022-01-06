@@ -116,6 +116,7 @@ Do not add xrender if missing or set to false or click on the trash icon.
 This is a legacy setting that shouldn't be used as it disables WebRender.
 gfx.xrender.enabled                            false
 
+Ensure false so to be on a supported code path for using WebRender.
 layers.acceleration.force-enabled              false
 
 media.ffmpeg.dmabuf-textures.enabled           true
