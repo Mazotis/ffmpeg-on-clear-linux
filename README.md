@@ -105,9 +105,9 @@ export MOZ_WEBRENDER=1
 ## Firefox Settings
 Please find the minimum settings applied via ```about:config``` to enable hardware acceleration. The ```media.rdd-ffmpeg.enable``` setting must be enabled for h264ify to work with FFmpeg also supporting vp9. Basically, choose to play videos via the h264ify extension or the vp9 format by disabling h264ify and enjoy beyond 1080P playback.
 ```text
+gfx.canvas.azure.accelerated                   true
 gfx.webrender.all                              true
 gfx.webrender.enabled                          true
-gfx.canvas.azure.accelerated                   true
 
 To use CPU instead of GPU
 gfx.webrender.software                         true
