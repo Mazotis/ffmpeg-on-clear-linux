@@ -110,6 +110,9 @@ gfx.webrender.all                              true
 gfx.webrender.enabled                          true
 gfx.canvas.azure.accelerated                   true
 
+To use CPU instead of GPU
+gfx.webrender.software                         true
+
 No need to set if missing or set false or click on the trash icon
 gfx.xrender.enabled                            false
 
