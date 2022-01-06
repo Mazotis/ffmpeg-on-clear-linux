@@ -109,7 +109,8 @@ gfx.canvas.azure.accelerated                   true
 gfx.webrender.all                              true
 gfx.webrender.enabled                          true
 
-Enable software if you prefer to render on the CPU instead of GPU.
+Enable software render if you prefer to render on the CPU instead of GPU.
+This is helpful if you want more GPU availability for playing videos.
 gfx.webrender.software                         true
 
 Do not add xrender if missing or set to false or click on the trash icon.
