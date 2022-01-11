@@ -10,9 +10,17 @@ mkdir -p builddir && cd builddir
 rm -fr ${name}
 
 if [[ ! -f ${name}.tar.gz ]]; then
-    url="https://gitlab.freedesktop.org/vdpau/${name}.git"
-    echo "git clone --depth 1 ${url}"
-    git clone --depth 1 ${url}
+  # url="https://gitlab.freedesktop.org/vdpau/${name}.git"
+  # echo "git clone --depth 1 ${url}"
+  # git clone --depth 1 ${url}
+
+    # Cloning may stall for some reason. Use the zip file instead.
+    url="https://github.com/freedesktop/vdpauinfo/archive/refs/heads/master.zip"
+    echo "curl -LO ${url}"
+    curl -LO ${url}
+    unzip master.zip && rm -f master.zip
+    mv ${name}-master ${name}
+
     tar czf ${name}.tar.gz ${name}
 else
     tar xzf ${name}.tar.gz
