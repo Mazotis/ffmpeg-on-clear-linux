@@ -20,7 +20,7 @@ fi
 
 if [[ -d ${name} ]]; then
     cd ${name}
-    ./autogen.sh --prefix=/usr/local && \
+    PKG_CONFIG_PATH=/usr/local/lib/pkgconfig ./autogen.sh --prefix=/usr/local && \
     make && make install
 fi
 
