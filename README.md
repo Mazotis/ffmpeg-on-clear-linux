@@ -89,9 +89,11 @@ export LIBVA_DRIVERS_PATH=/usr/lib64/dri
 export LIBVA_DRIVER_NAME=vdpau
 export VDPAU_DRIVER=nvidia
 
-if [ $XDG_SESSION_TYPE == wayland ]; then
+if [ $XDG_SESSION_TYPE == wayland ]
+then
     export MOZ_ENABLE_WAYLAND=1
 elif [ $XDG_SESSION_TYPE == x11 ]
+then
     export MOZ_DISABLE_WAYLAND=1
     export MOZ_X11_EGL=1
 fi
