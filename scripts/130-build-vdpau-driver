@@ -25,7 +25,7 @@ if [[ -d ${name} ]]; then
         patch -p1 < "../../../patches/${name}/${file}"
         [[ $? -ne 0 ]] && exit $?
     done
-    LDFLAGS="-L/usr/local/lib" ./autogen.sh --prefix=/usr --enable-glx && \
+    LDFLAGS="-L/usr/local/lib -L/opt/nvidia/lib64" ./autogen.sh --prefix=/usr --enable-glx && \
     make -j 4 && make install && \
     rm -f /usr/lib64/dri/vdpau_drv_video.la
 fi
