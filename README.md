@@ -83,9 +83,9 @@ yuv444p12le gbrp12le gray gray10le gray12le
 
 ## Firefox Config
 
-The following is my Firefox config (running XOrg). Adjust LIBVA and VDPAU variables accordingly. For ```vdpauinfo``` to work on Intel graphics, install the ```va_gl``` [driver](https://github.com/i-rinat/libvdpau-va-gl) driver. Change to ```LIBVA_DRIVER_NAME=i965``` and ```VDPAU_DRIVER=va_gl```. If that is not working, try ```LIBVA_DRIVER_NAME=iHD``` or comment out the first 3 export lines, exporting only ```LD_LIBRARY_PATH```.
+The following is my Firefox config (running XOrg). Adjust LIBVA and VDPAU variables accordingly. For ```vdpauinfo``` to work on Intel graphics, install the ```va_gl``` [driver](https://github.com/i-rinat/libvdpau-va-gl). Change to ```LIBVA_DRIVER_NAME=i965``` and ```VDPAU_DRIVER=va_gl```. If that is not working, try ```LIBVA_DRIVER_NAME=iHD``` or comment out the first 3 export lines, exporting only ```LD_LIBRARY_PATH```.
 
-**Note:** The ```libvdpau-va-gl``` driver is only useful on Intel for software that doesn't use VAAPI, such as Adobe Flash. There are also applications that may use VAAPI better than VDPAU for which ```libva-vdpau-driver``` may be useful. The ```iHD``` driver is newer than the ```i965``` driver. Using ```iHD``` requires the [Intel(R) Media Driver for VAAPI](https://github.com/intel/media-driver/).
+**Note:** The ```libvdpau-va-gl``` driver is only useful on Intel for software that doesn't use VAAPI, such as Adobe Flash. There are also applications that may use VAAPI better than VDPAU for which ```libva-vdpau-driver``` may be useful. The ```iHD``` driver is newer than the ```i965``` driver. Using ```iHD``` requires the [Intel(R) Media Driver](https://github.com/intel/media-driver/) for VAAPI.
 
 ```bash
 $ cat ~/.config/firefox.conf
