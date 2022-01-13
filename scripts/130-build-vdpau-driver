@@ -3,28 +3,23 @@
 # Exit silently if the graphics driver is not installed.
 [[ ! -f /opt/nvidia/bin/nvidia-settings ]] && exit 0
 
-name="vdpau-driver-0.7.4"
+name="vdpau-va-driver-vp9"
 echo "building ${name}"
 
 mkdir -p builddir && cd builddir
 rm -fr ${name}
 
 if [[ ! -f ${name}.tar.gz ]]; then
-    url="https://github.com/freedesktop/vdpau-driver/archive/refs/tags/0.7.4.tar.gz"
-    echo "curl -LO ${url}"
-    curl -LO ${url}
-    mv 0.7.4.tar.gz ${name}.tar.gz
+    url="https://github.com/xuanruiqi/${name}.git"
+    echo "git clone --depth 1 ${url}"
+    git clone --depth 1 ${url}
+    tar czf ${name}.tar.gz ${name}
 fi
 
 tar xzf ${name}.tar.gz
 
 if [[ -d ${name} ]]; then
     cd ${name}
-    for file in `cat ../../../patches/${name}/series`; do
-        echo "patch -p1 < ../../../patches/${name}/${file}"
-        patch -p1 < "../../../patches/${name}/${file}"
-        [[ $? -ne 0 ]] && exit $?
-    done
     LDFLAGS="-L/usr/local/lib -L/opt/nvidia/lib64" ./autogen.sh --prefix=/usr --enable-glx && \
     make -j 4 && make install && \
     rm -f /usr/lib64/dri/vdpau_drv_video.la
