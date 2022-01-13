@@ -194,11 +194,19 @@ Opening new windows may be larger then the initial window. That can be annoying 
 $BASEDIR/latest/chrome --window-size=1000,800 ...
 ```
 
-## HDR Videos
+## How can I make sure hardware acceleration is working?
+
+Run a tool suited for your hardware while watching a video.
+
+1. ```watch -n 1 /opt/nvidia/bin/nvidia-smi``` to check if "GPU-Util" percentage goes up
+2. ```sudo intel_gpu_top``` to check if percentage under "Video" section goes up
+3. ```watch -n 1 sudo intel_gpu_frequency``` to check if the frequency goes up
+
+## HDR videos
 
 To play HDR videos, see ```youtube-play``` found in the extras folder.
 
-## See Also
+## See also
 
 [Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration) at Arch Linux.
 
