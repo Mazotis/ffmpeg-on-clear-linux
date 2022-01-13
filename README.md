@@ -158,6 +158,11 @@ export LIBVA_DRIVER_NAME=vdpau
 export VDPAU_DRIVER=nvidia
 export LD_LIBRARY_PATH=/opt/nvidia/lib64:/usr/local/lib
 
+# To rid of the Google API keys are missing notification.
+export GOOGLE_API_KEY=no
+export GOOGLE_DEFAULT_CLIENT_ID=no
+export GOOGLE_DEFAULT_CLIENT_SECRET=no
+
 BASEDIR=$(dirname $0)
 
 $BASEDIR/latest/chrome --user-data-dir="$BASEDIR/user-data-dir" $* &> /dev/null &
