@@ -1,14 +1,13 @@
 # ffmpeg-on-clear-linux
 Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) including H.264 and vp9 hardware acceleration in Firefox.
 
-This is an automation How-To repository for building FFmpeg and minimum dependencies. My motivation is wanting hardware acceleration in Firefox. Thank you, @xtknight for the [vp9](https://github.com/xtknight/vdpau-va-driver-vp9) acceleration bits.
+This is an automation How-To repository for building FFmpeg and minimum dependencies. My motivation is wanting hardware acceleration in Firefox. Thank you, @xtknight for the initial [vp9](https://github.com/xtknight/vdpau-va-driver-vp9) acceleration bits. Thank you, @xuanruiqi for [updated vp9](https://github.com/xuanruiqi/vdpau-va-driver-vp9) incorporating Arch Linux patches.
 
 ## What's Included
 ```text
 build-all  Top-level script for building dependencies and FFmpeg.
 extras     Complementary YouTube player for testing nvdec/nvenc.
 localenv   Set your GPU's CUDA compute capability here.
-patches    Various patches for vdpau-driver 0.7.4.
 scripts    Contains the individual build/install scripts.
 ```
 
