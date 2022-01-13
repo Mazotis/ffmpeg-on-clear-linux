@@ -171,7 +171,7 @@ On first launch, go into ```Settings -> Appearance -> Customize fonts``` and cha
 $ ./update-and-run.sh
 ```
 
-**Run Chromium**
+**Subsequently**
 
 ```bash
 $ ./run.sh
@@ -181,7 +181,7 @@ $ ./run.sh
 
 To play HDR videos, see ```youtube-play``` found in the extras folder.
 
-## See also
+## See Also
 
 [Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration)
 
