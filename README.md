@@ -146,7 +146,7 @@ media.navigator.mediadatadecoder_vpx_enabled   true
 
 ## Run Chromium
 
-[Chromium](https://dev.chromium.org/Home) is an open-source browser project. This repository [chromium-latest-linux](https://github.com/scheib/chromium-latest-linux) for launching Chromium works great including ```vp9``` video playback.
+[Chromium](https://dev.chromium.org/Home) is an open-source browser project. Some say a browser made for developers. Well, it's kind of nice. This repository [chromium-latest-linux](https://github.com/scheib/chromium-latest-linux) for launching Chromium works great including ```vp9``` video playback.
 
 **Edit run.sh script**
 
@@ -188,10 +188,10 @@ $ ./run.sh
 
 **Oddity**
 
-Opening new windows may be larger then the initial window. Edit ```run.sh``` and add ```--window-size=x,y``` argument to chrome. Restart Chromium. New windows retain the same size.
+Opening new windows may be larger then the initial window. That can be annoying after a while. Edit ```run.sh``` and add ```--window-size=x,y``` to the chrome line. Adjust ```x,y``` to your liking and restart Chromium. New windows now retain the same size.
 
 ```bash
-$BASEDIR/latest/chrome --window-size=1000,800 --user-data-dir="$BASEDIR/user-data-dir" $* &> /dev/null &
+$BASEDIR/latest/chrome --window-size=1000,800 ...
 ```
 
 ## HDR Videos
