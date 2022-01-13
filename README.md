@@ -183,5 +183,5 @@ To play HDR videos, see ```youtube-play``` found in the extras folder.
 
 ## See Also
 
-[Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration)
+[Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration) at Arch Linux.
 
