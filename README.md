@@ -1,9 +1,11 @@
 # ffmpeg-on-clear-linux
+
 Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) including H.264 and vp9 hardware acceleration in Firefox.
 
-This is an automation How-To repository for building FFmpeg and minimum dependencies. My motivation is wanting hardware acceleration in Firefox. Thank you, @xtknight for the initial [vp9](https://github.com/xtknight/vdpau-va-driver-vp9) acceleration bits. Thank you, @xuanruiqi for [vp9-update](https://github.com/xuanruiqi/vdpau-va-driver-vp9) with Arch Linux patches.
+This is an automation How-To repository for building FFmpeg and minimum dependencies. My motivation is wanting hardware acceleration in Chromium and Firefox. Thank you, @xtknight for the initial [vp9](https://github.com/xtknight/vdpau-va-driver-vp9) acceleration bits. Thank you, @xuanruiqi for the [vp9-update](https://github.com/xuanruiqi/vdpau-va-driver-vp9) with Arch Linux patches and additional fixes.
 
 ## What's Included
+
 ```text
 build-all  Top-level script for building dependencies and FFmpeg.
 extras     Complementary YouTube player for testing nvdec/nvenc.
@@ -12,6 +14,7 @@ scripts    Contains the individual build/install scripts.
 ```
 
 ## Requirements
+
 Although testing was done using a NVIDIA GPU, the Intel Media SDK is included during the build process. For NVIDIA GPUs, this requires the proprietary driver to be installed under ```/opt/nvidia```. Optionally install CUDA for extra hardware acceleration capabilities. See installation guides [NVIDIA Drivers](https://docs.01.org/clearlinux/latest/tutorials/nvidia.html) and [NVIDIA CUDA Toolkit](https://docs.01.org/clearlinux/latest/tutorials/nvidia-cuda.html).
 
 Set your GPU's [compute capability](https://en.wikipedia.org/wiki/CUDA) in ```localenv```. The file resides at the top-level and is ignored by Git. The GeForce GTX 1660 model supports max ```7.5``` compute capability.
@@ -32,6 +35,7 @@ EndSection
 ```
 
 ## Building and Installation
+
 The build and installation is a one-step process.
 ```bash
 $ sudo bash build-all
@@ -50,11 +54,12 @@ cd scripts
 
 The ```builddir``` (once created) serves as a cache folder. Remove the correspondent ```*.tar.gz``` file(s) to re-fetch or re-clone from the internet.
 
-I'm hoping that the build process succeeds for you as it does for me. However, I may have a bundle installed that's missing in the ```000-install-dependencies``` script. Please reach out if that is the case. The Media SDK is included in the FFmpeg build for Intel hardware, but not yet tested what else is needed on that platform. It may be documenting the value to use for ```LIBVA_DRIVER_NAME```.
+I'm hoping that the build process succeeds for you as it does for me. However, I may have a bundle installed that's missing in the ```000-install-dependencies``` script. Please reach out if that's the case. The Media SDK is included in the FFmpeg build for Intel hardware, but not yet tested what else is needed on that platform. It may be documenting the value to use for ```LIBVA_DRIVER_NAME```.
 
 Remember to add ```/usr/local/bin``` to your ```PATH``` environment variable if not already done.
 
 ## x264 and x265 Multilibs
+
 Below ```x264``` supports 8-bits and 10-bits output.
 ```bash
 $ x264 --help | grep "Output bit depth"
@@ -77,16 +82,16 @@ yuv444p12le gbrp12le gray gray10le gray12le
 ```
 
 ## Firefox Config
-The following is my Firefox config (running XOrg). Adjust LIBVA and VDPAU variables accordingly for Intel or AMD GPUs.
+
+The following is my Firefox config (running XOrg). Adjust LIBVA and VDPAU variables accordingly. For ```vdpauinfo``` to work on Intel graphics, install the ```va_gl``` [driver](https://github.com/i-rinat/libvdpau-va-gl) driver. Change to ```LIBVA_DRIVER_NAME=i965``` and ```VDPAU_DRIVER=va_gl```. If that is not working, try ```LIBVA_DRIVER_NAME=iHD``` or comment out the first 3 export lines, exporting only ```LD_LIBRARY_PATH```.
 
 ```bash
 $ cat ~/.config/firefox.conf
 
-export LD_LIBRARY_PATH=/opt/nvidia/lib64:/usr/local/lib
-
 export LIBVA_DRIVERS_PATH=/usr/lib64/dri
 export LIBVA_DRIVER_NAME=vdpau
 export VDPAU_DRIVER=nvidia
+export LD_LIBRARY_PATH=/opt/nvidia/lib64:/usr/local/lib
 
 if [ $XDG_SESSION_TYPE == wayland ]
 then
@@ -104,6 +109,7 @@ export MOZ_WEBRENDER=1
 ```
 
 ## Firefox Settings
+
 Please find the minimum settings applied via ```about:config``` to enable hardware acceleration. The ```media.rdd-ffmpeg.enable``` setting must be enabled for h264ify to work with FFmpeg also supporting vp9. Basically, choose to play videos via the h264ify extension or the vp9 format by disabling h264ify and enjoy beyond 1080P playback.
 ```text
 gfx.canvas.azure.accelerated                   true
@@ -136,4 +142,46 @@ Enable FFMPEG VA-API decoding support for WebRTC on Linux.
 media.navigator.mediadatadecoder_vpx_enabled   true
 ```
 
+## Run Chromium
+
+This repository [chromium-latest-linux](https://github.com/scheib/chromium-latest-linux) for launching Chromium works great including ```vp9``` video playback.
+
+** Edit run.sh script **
+
+Insert lines exporting ```LIBVA_DRIVERS_PATH```, ```LIBVA_DRIVER_NAME```, ```VDPAU_DRIVER```, and ```LD_LIBRARY_PATH```. For Intel Graphics, change to ```LIBVA_DRIVER_NAME=i965``` and ```VDPAU_DRIVER=va_gl```. If that is not working, as noted above try ```LIBVA_DRIVER_NAME=iHD``` or comment out the first 3 export lines, exporting only ```LD_LIBRARY_PATH```.
+
+```bash
+#! /bin/bash
+
+export LIBVA_DRIVERS_PATH=/usr/lib64/dri
+export LIBVA_DRIVER_NAME=vdpau
+export VDPAU_DRIVER=nvidia
+export LD_LIBRARY_PATH=/opt/nvidia/lib64:/usr/local/lib
+
+BASEDIR=$(dirname $0)
+
+$BASEDIR/latest/chrome --user-data-dir="$BASEDIR/user-data-dir" $* &> /dev/null &
+```
+
+** First time **
+
+On first launch, go into ```Settings -> Appearance -> Customize fonts``` and change the fonts to your liking. On Clear Linux, Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans``` look great.
+
+```bash
+$ ./update-and-run.sh
+```
+
+** Run Chromium **
+
+```bash
+$ ./run.sh
+```
+
+## HDR Videos
+
 To play HDR videos, see ```youtube-play``` found in the extras folder.
+
+## See also
+
+[Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration)
+
