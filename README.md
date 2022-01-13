@@ -15,7 +15,7 @@ scripts    Contains the individual build/install scripts.
 
 ## Requirements
 
-Although testing was done using a NVIDIA GPU, the Intel Media SDK is included during the build process. For NVIDIA GPUs, this requires the proprietary driver to be installed under ```/opt/nvidia```. Optionally install CUDA for extra hardware acceleration capabilities. See installation guides [NVIDIA Drivers](https://docs.01.org/clearlinux/latest/tutorials/nvidia.html) and [NVIDIA CUDA Toolkit](https://docs.01.org/clearlinux/latest/tutorials/nvidia-cuda.html).
+Although testing was done using a NVIDIA GPU, the Intel(R) Media SDK is included during the build process. For NVIDIA GPUs, this requires the proprietary driver to be installed under ```/opt/nvidia```. Optionally install CUDA for extra hardware acceleration capabilities. See installation guides [NVIDIA Drivers](https://docs.01.org/clearlinux/latest/tutorials/nvidia.html) and [NVIDIA CUDA Toolkit](https://docs.01.org/clearlinux/latest/tutorials/nvidia-cuda.html).
 
 Set your GPU's [compute capability](https://en.wikipedia.org/wiki/CUDA) in ```localenv```. The file resides at the top-level and is ignored by Git. The GeForce GTX 1660 model supports max ```7.5``` compute capability.
 ```text
@@ -84,6 +84,8 @@ yuv444p12le gbrp12le gray gray10le gray12le
 ## Firefox Config
 
 The following is my Firefox config (running XOrg). Adjust LIBVA and VDPAU variables accordingly. For ```vdpauinfo``` to work on Intel graphics, install the ```va_gl``` [driver](https://github.com/i-rinat/libvdpau-va-gl) driver. Change to ```LIBVA_DRIVER_NAME=i965``` and ```VDPAU_DRIVER=va_gl```. If that is not working, try ```LIBVA_DRIVER_NAME=iHD``` or comment out the first 3 export lines, exporting only ```LD_LIBRARY_PATH```.
+
+**Note:** The ```libvdpau-va-gl``` driver is only useful on Intel for software that doesn't use VAAPI, such as Adobe Flash. There are also applications that may use VAAPI better than VDPAU for which ```libva-vdpau-driver``` may be useful. The ```iHD``` driver is newer than the ```i965``` driver. Using ```iHD``` requires the [Intel(R) Media Driver for VAAPI](https://github.com/intel/media-driver/).
 
 ```bash
 $ cat ~/.config/firefox.conf
