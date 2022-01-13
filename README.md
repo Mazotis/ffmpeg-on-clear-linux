@@ -146,7 +146,7 @@ media.navigator.mediadatadecoder_vpx_enabled   true
 
 This repository [chromium-latest-linux](https://github.com/scheib/chromium-latest-linux) for launching Chromium works great including ```vp9``` video playback.
 
-** Edit run.sh script **
+**Edit run.sh script**
 
 Insert lines exporting ```LIBVA_DRIVERS_PATH```, ```LIBVA_DRIVER_NAME```, ```VDPAU_DRIVER```, and ```LD_LIBRARY_PATH```. For Intel Graphics, change to ```LIBVA_DRIVER_NAME=i965``` and ```VDPAU_DRIVER=va_gl```. If that is not working, as noted above try ```LIBVA_DRIVER_NAME=iHD``` or comment out the first 3 export lines, exporting only ```LD_LIBRARY_PATH```.
 
@@ -163,7 +163,7 @@ BASEDIR=$(dirname $0)
 $BASEDIR/latest/chrome --user-data-dir="$BASEDIR/user-data-dir" $* &> /dev/null &
 ```
 
-** First time **
+**First time**
 
 On first launch, go into ```Settings -> Appearance -> Customize fonts``` and change the fonts to your liking. On Clear Linux, Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans``` look great.
 
@@ -171,7 +171,7 @@ On first launch, go into ```Settings -> Appearance -> Customize fonts``` and cha
 $ ./update-and-run.sh
 ```
 
-** Run Chromium **
+**Run Chromium**
 
 ```bash
 $ ./run.sh
