@@ -12,6 +12,7 @@ Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) incl
 * [Chromium installation and configuration](#chromium-installation-and-configuration)
 * [Google Chrome installation and run script](#google-chrome-installation-and-run-script)
 * [Vivaldi installation and run script](#vivaldi-installation-and-run-script)
+* [Caveat with RPM package installation](#caveat-with-rpm-package-installation)
 * [How can I make sure hardware acceleration is working?](#how-can-i-make-sure-hardware-acceleration-is-working)
 * [Watch HDR videos](#watch-hdr-videos)
 * [See also](#see-also-annoucement-at-clear-linux-plus-wikis-at-arch-linux)
@@ -343,6 +344,18 @@ On first launch, go into ```Settings -> Webpages -> Fonts``` and change the defa
 
 ```
 $ ./run-vivaldi.sh
+```
+
+## Caveat with RPM package installation
+
+It feels hacky on Clear Linux installing a RPM package that was built for another platform such as RedHat. This is my humble opinion. For piece of mind, check for missing library dependencies using the ```ldd``` utility. Ensure nothing is missing in the output. If true, then install missing packages with ```sudo swupd bundle-add PKGNAME```. Run ```sudo swupd search LIBNAME``` if needed.
+
+Another solution is building from source. This is likely not necessary, although becomes reality if unable to meet library dependencies. Uninstall the RPM with ```sudo rpm -e NAME```.
+
+```bash
+$ ldd ~/chromium-latest-linux-master/latest/chrome
+$ ldd /opt/google/chrome/chrome
+$ ldd /opt/vivaldi/vivaldi-bin
 ```
 
 ## How can I make sure hardware acceleration is working?
