@@ -4,6 +4,22 @@ Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) incl
 
 This is an automation **how-to** for building FFmpeg and minimum dependencies. My motivation is nothing more than wanting hardware acceleration during video playback. Who doesn't want that? Thank you, @xtknight for the initial [VP9](https://github.com/xtknight/vdpau-va-driver-vp9) acceleration bits. Thank you also, @xuanruiqi for the [VP9-update](https://github.com/xuanruiqi/vdpau-va-driver-vp9) to include additional fixes.
 
+* [What's included](#whats-included)
+* [Requirements](#requirements)
+* [Building and installation](#building-and-installation)
+* [x264 and x265 multilibs](#x264-and-x265-multilibs)
+* [Determine the VAAPI driver to use](#determine-the-vaapi-driver-to-use)
+* [Firefox config](#firefox-config)
+* [Firefox settings](#firefox-settings)
+* [Chromium installation and configuration](#chromium-installation-and-configuration)
+* [Google Chrome installation and run script](#google-chrome-installation-and-run-script)
+* [Vivaldi installation and run script](#vivaldi-installation-and-run-script)
+* [How can I make sure hardware acceleration is working?](#how-can-i-make-sure-hardware-acceleration-is-working)
+* [HDR videos](#hdr-videos)
+* [See also](#see-also-annoucement-at-clear-linux-plus-wikis-at-arch-linux)
+
+------
+
 ## What's included
 
 ```text
