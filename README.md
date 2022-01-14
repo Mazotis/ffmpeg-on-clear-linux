@@ -295,8 +295,8 @@ To play HDR videos, see ```youtube-play``` found in the extras folder.
 
 ## See also, Wikis at Arch Linux
 
+* [Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration)
 * [Chromium](https://wiki.archlinux.org/title/Chromium)
 * [Firefox](https://wiki.archlinux.org/title/Firefox)
 * [Google Chrome](https://wiki.archlinux.org/title/Google_chrome)
-* [Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration)
 
