@@ -4,7 +4,7 @@ Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) incl
 
 This is an automation **how-to** for building FFmpeg and minimum dependencies. My motivation is nothing more than wanting hardware acceleration during video playback. Who doesn't want that? Thank you, @xtknight for the initial [VP9](https://github.com/xtknight/vdpau-va-driver-vp9) acceleration bits. Thank you also, @xuanruiqi for the [VP9-update](https://github.com/xuanruiqi/vdpau-va-driver-vp9) to include additional fixes.
 
-## What's Included
+## What's included
 
 ```text
 build-all  Top-level script for building dependencies and FFmpeg.
@@ -36,7 +36,7 @@ Section "Device"
 EndSection
 ```
 
-## Building and Installation
+## Building and installation
 
 The build and installation is a one-step process.
 
@@ -62,7 +62,7 @@ I'm hoping that the build process succeeds for you as it does for me. However, I
 
 Remember to add ```/usr/local/bin``` to your ```PATH``` environment variable if not already done, preferably before ```/usr/bin```.
 
-## x264 and x265 Multilibs
+## x264 and x265 multilibs
 
 Below ```x264``` supports 8-bits and 10-bits output.
 
@@ -115,7 +115,7 @@ vainfo: Supported profile and entrypoints
       VAProfileVP9Profile0            : VAEntrypointVLD
 ```
 
-## Firefox Config
+## Firefox config
 
 The following is my Firefox config. Adjust the value for ```LIBVA_DRIVER_NAME``` accordingly.
 
@@ -141,7 +141,7 @@ export MOZ_USE_XINPUT2=1
 export MOZ_WEBRENDER=1
 ```
 
-## Firefox Settings
+## Firefox settings
 
 Below are the minimum settings applied via ```about:config``` to enable hardware acceleration. The ```media.rdd-ffmpeg.enable``` flag must be enabled for h264ify to work along with VP9. Basically, this allows you to choose to play videos via the h264ify extension or the VP9 format by disabling h264ify and enjoy beyond 1080P playback.
 
@@ -229,7 +229,7 @@ $ ./update-and-run.sh
 $ ./run.sh
 ```
 
-## Google Chrome installation and Run script
+## Google Chrome installation and run script
 
 [Google Chrome](https://www.google.com/chrome/) is an open-source browser built by Google. Imaging that! You will find that the browser is quite fast. For NVIDIA hardware, one nicety is that video playback utilizes the Video Engine along with the GPU. That is quite awesome and saves me 15 watts versus Chromium and Firefox.
 
@@ -281,7 +281,7 @@ On first launch (just like with Chromium), you may want to go into ```Settings -
 $ ./run-chrome.sh
 ```
 
-## Vivaldi installation and Run script
+## Vivaldi installation and run script
 
 [Vivaldi](https://vivaldi.com) is yet another open-source browser. The main highlight is being able to communicate in a much more organized way, while keeping control of your data. That sounds delightful! For NVIDIA hardware, one nicety is that video playback also utilizes the Video Engine along with the GPU. This is similarly to Google Chrome.
 
@@ -345,7 +345,7 @@ To play HDR videos, see ```youtube-play``` found in the extras folder.
 
 ## See also, annoucement at Clear Linux plus wikis at Arch Linux
 
-* [Annoucement and Benchmarks](https://community.clearlinux.org/t/ffmpeg-supporting-h-264-and-vp9-hardware-acceleration-in-firefox/6148)
+* [Annoucement and benchmarks](https://community.clearlinux.org/t/ffmpeg-supporting-h-264-and-vp9-hardware-acceleration-in-firefox/6148)
 * [Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration)
 * [Chromium](https://wiki.archlinux.org/title/Chromium)
 * [Firefox](https://wiki.archlinux.org/title/Firefox)
