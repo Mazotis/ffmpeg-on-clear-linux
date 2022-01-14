@@ -18,8 +18,6 @@ This is an automation **how-to** for building FFmpeg and minimum dependencies. M
 * [HDR videos](#hdr-videos)
 * [See also](#see-also-annoucement-at-clear-linux-plus-wikis-at-arch-linux)
 
-------
-
 ## What's included
 
 ```text
