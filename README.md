@@ -229,7 +229,7 @@ $ ./update-and-run.sh
 $ ./run.sh
 ```
 
-## Google Chrome Installation and Run Script
+## Google Chrome Installation and Run script
 
 [Google Chrome](https://www.google.com/chrome/) is an open-source browser built by Google. You will find that the browser is quite fast. For NVIDIA hardware, one nicety is that video playback utilizes the Video Engine along with the GPU.
 
@@ -238,9 +238,9 @@ The ```RPM``` file for Google Chrome can be found at [Google](https://www.google
 ```bash
 $ sudo mkdir -p /etc/default
 $ sudo touch /etc/default/google-chrome
-# Download from Google
-$ sudo rpm -ivh ~/Downloads/google-chrome-stable_current_x86_64.rpm
-# Download from pkgs.org
+# if downloaded file from Google
+$ sudo rpm -ivh ~/Downloads/google-chrome-stable_current_x86_64.rpm --nodeps
+# if downloaded file from pkgs.org, version may differ over time
 $ sudo rpm -ivh ~/Downloads/google-chrome-stable-97.0.4692.71-1.x86_64.rpm --nodeps
 ```
 
