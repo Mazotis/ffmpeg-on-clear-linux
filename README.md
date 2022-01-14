@@ -2,7 +2,7 @@
 
 Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) including H.264 and VP9 hardware acceleration in Firefox and Google Chrome. Chromium can decode VP9, but not the H.264/ACC media format.
 
-This is an automation How-To repository for building FFmpeg and minimum dependencies. My motivation is wanting hardware acceleration for video playback. Thank you, @xtknight for the initial [VP9](https://github.com/xtknight/vdpau-va-driver-vp9) acceleration bits. Thank you, @xuanruiqi for the [VP9-update](https://github.com/xuanruiqi/vdpau-va-driver-vp9) with additional fixes.
+This is an automation How-To for building FFmpeg and minimum dependencies. My motivation is wanting hardware acceleration for video playback. Thank you, @xtknight for the initial [VP9](https://github.com/xtknight/vdpau-va-driver-vp9) acceleration bits. Thank you, @xuanruiqi for the [VP9-update](https://github.com/xuanruiqi/vdpau-va-driver-vp9) with additional fixes.
 
 ## What's Included
 
@@ -293,8 +293,9 @@ In Chromium and Google Chrome, check the ```chrome://gpu``` page. In Firefox, ch
 
 To play HDR videos, see ```youtube-play``` found in the extras folder.
 
-## See also, Wikis at Arch Linux
+## See also, Annoucement at Clear Linux, Wikis at Arch Linux
 
+* [Annoucement and Benchmarks](https://community.clearlinux.org/t/ffmpeg-supporting-h-264-and-vp9-hardware-acceleration-in-firefox/6148)
 * [Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration)
 * [Chromium](https://wiki.archlinux.org/title/Chromium)
 * [Firefox](https://wiki.archlinux.org/title/Firefox)
