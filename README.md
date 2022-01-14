@@ -7,7 +7,7 @@ Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) incl
 * [Building and installation](#building-and-installation)
 * [x264 and x265 multilibs](#x264-and-x265-multilibs)
 * [Determine the VAAPI driver to use](#determine-the-vaapi-driver-to-use)
-* [Firefox config](#firefox-config)
+* [Firefox configuration](#firefox-configuration)
 * [Firefox settings](#firefox-settings)
 * [Chromium installation and configuration](#chromium-installation-and-configuration)
 * [Google Chrome installation and run script](#google-chrome-installation-and-run-script)
@@ -129,7 +129,7 @@ vainfo: Supported profile and entrypoints
       VAProfileVP9Profile0            : VAEntrypointVLD
 ```
 
-## Firefox config
+## Firefox configuration
 
 The following is my Firefox config. Adjust the value for ```LIBVA_DRIVER_NAME``` accordingly.
 
