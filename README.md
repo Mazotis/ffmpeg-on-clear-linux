@@ -1,8 +1,8 @@
 # ffmpeg-on-clear-linux
 
-Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) including H.264 and vp9 hardware acceleration in Chromium and Firefox.
+Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) including H.264 and VP9 hardware acceleration in Firefox and Google Chrome. Chromium can decode VP9, but not the H.264/ACC media format.
 
-This is an automation How-To repository for building FFmpeg and minimum dependencies. My motivation is wanting hardware acceleration in Chromium and Firefox. Thank you, @xtknight for the initial [vp9](https://github.com/xtknight/vdpau-va-driver-vp9) acceleration bits. Thank you, @xuanruiqi for the [vp9-update](https://github.com/xuanruiqi/vdpau-va-driver-vp9) with Arch Linux updates and additional fixes.
+This is an automation How-To repository for building FFmpeg and minimum dependencies. My motivation is wanting hardware acceleration for video playback. Thank you, @xtknight for the initial [VP9](https://github.com/xtknight/vdpau-va-driver-vp9) acceleration bits. Thank you, @xuanruiqi for the [VP9-update](https://github.com/xuanruiqi/vdpau-va-driver-vp9) with additional fixes.
 
 ## What's Included
 
@@ -17,14 +17,14 @@ scripts    Contains the individual build/install scripts.
 
 Although testing was done using a NVIDIA GPU, the Intel(R) Media SDK is included during the build process. For NVIDIA GPUs, this requires the proprietary driver to be installed under ```/opt/nvidia```. Optionally install CUDA for extra hardware acceleration capabilities. See installation guides [NVIDIA Drivers](https://docs.01.org/clearlinux/latest/tutorials/nvidia.html) and [NVIDIA CUDA Toolkit](https://docs.01.org/clearlinux/latest/tutorials/nvidia-cuda.html).
 
-For NVIDIA hardware, set your GPU's [compute capability](https://en.wikipedia.org/wiki/CUDA) in ```localenv```. The file resides at the top-level and is ignored by Git. For example, the GeForce GTX 1660 model supports max ```7.5``` compute capability.
+Set your GPU's [compute capability](https://en.wikipedia.org/wiki/CUDA) in ```localenv```. The file resides at the top-level and is ignored by Git. For example, the GeForce GTX 1660 model supports max ```7.5``` compute capability. Omit this step is using a non-NVIDIA GPU.
 
 ```text
 cudaarch="compute_75"  # Turing
 cudacode="sm_75"
 ```
 
-Enable ```ForceCompositionPipeline``` for a better desktop experience, especially when moving/resizing a terminal window while playing a video. This can be done at the device level by adding/editing a file ```/etc/X11/xorg.conf.d/nvidia-device.conf```. Replace ```MODEL_STRING``` with your actual GPU model (i.e. GTX 1660). Finally reboot for the change to take effect.
+Optionally, enable ```ForceCompositionPipeline``` for a better desktop experience, especially when moving/resizing a terminal window while playing a video. This can be done at the device level by adding/editing a file ```/etc/X11/xorg.conf.d/nvidia-device.conf```. Replace ```MODEL_STRING``` with your actual GPU model (i.e. GTX 1660). Finally reboot for the change to take effect.
 
 ```text
 Section "Device"
@@ -44,7 +44,7 @@ The build and installation is a one-step process.
 $ sudo bash build-all
 ```
 
-Or become root and run each script individually. Be sure to run ```000-install-dependencies``` first. Various scripts exit silently depending on whether ```/opt/nvidia/bin/nvidia-settings``` or ```/usr/local/cuda/cuda.h``` exists.
+Or become root and run each script individually. Be sure to run ```000-install-dependencies``` first if choosing this path. Various scripts exit silently depending on whether ```/opt/nvidia/bin/nvidia-settings``` or ```/usr/local/cuda/cuda.h``` exists.
 
 ```bash
 $ sudo root
@@ -58,7 +58,7 @@ cd scripts
 
 The ```builddir``` (once created) serves as a cache folder. Remove the correspondent ```*.tar.gz``` file(s) to re-fetch or re-clone from the internet.
 
-I'm hoping that the build process succeeds for you as it does for me. However, I may have a bundle installed that's missing in the ```000-install-dependencies``` script. Please reach out if that's the case. The Media SDK is included in the FFmpeg build for Intel hardware, but not yet tested what else is needed on that platform. It may be documenting the value to use for ```LIBVA_DRIVER_NAME```.
+I'm hoping that the build process succeeds for you as it does for me. However, I may have a bundle installed that's missing in ```000-install-dependencies```. Please reach out if that's the case. The Media SDK is included in the FFmpeg build for Intel hardware, but not yet tested what else is needed for that platform. It may be documenting the value to use for ```LIBVA_DRIVER_NAME```.
 
 Remember to add ```/usr/local/bin``` to your ```PATH``` environment variable if not already done.
 
@@ -87,18 +87,43 @@ gbrp yuv420p10le yuv422p10le yuv444p10le gbrp10le yuv420p12le yuv422p12le
 yuv444p12le gbrp12le gray gray10le gray12le
 ```
 
+## Determine the VAAPI driver to use
+
+For hardware acceleration to work, the browser may have the VAAPI driver built-in or you will need a suitable driver, i.e. ```ls /usr/lib64/dri/*_drv_video.so```. To be sure run ```vainfo``` in a terminal window. For AMD, try ```LIBVA_DRIVER_NAME=r600 vainfo``` or ```LIBVA_DRIVER_NAME=radeonsi vainfo```. For Intel, the ```iHD``` driver is newer. So check first ```LIBVA_DRIVER_NAME=iHD vainfo```. Otherwise, try ```LIBVA_DRIVER_NAME=i965 vainfo```. Below is captured output for the ```nvidia``` driver.
+
+```bash
+$ LIBVA_DRIVER_NAME=nvidia vainfo
+
+libva info: VA-API version 1.11.0
+libva info: User environment variable requested driver 'nvidia'
+libva info: Trying to open /usr/lib64/dri/nvidia_drv_video.so
+libva info: Found init function __vaDriverInit_1_11
+libva info: va_openDriver() returns 0
+vainfo: VA-API version: 1.11 (libva 2.11.0)
+vainfo: Driver version: Splitted-Desktop Systems VDPAU backend for VA-API - 0.7.4
+vainfo: Supported profile and entrypoints
+      VAProfileMPEG2Simple            : VAEntrypointVLD
+      VAProfileMPEG2Main              : VAEntrypointVLD
+      VAProfileMPEG4Simple            : VAEntrypointVLD
+      VAProfileMPEG4AdvancedSimple    : VAEntrypointVLD
+      VAProfileH264ConstrainedBaseline: VAEntrypointVLD
+      VAProfileH264Main               : VAEntrypointVLD
+      VAProfileH264High               : VAEntrypointVLD
+      VAProfileVC1Simple              : VAEntrypointVLD
+      VAProfileVC1Main                : VAEntrypointVLD
+      VAProfileVC1Advanced            : VAEntrypointVLD
+      VAProfileVP9Profile0            : VAEntrypointVLD
+```
+
 ## Firefox Config
 
-The following is my Firefox config (running XOrg). Adjust LIBVA and VDPAU variables accordingly. For ```vdpauinfo``` to work on Intel graphics, install the ```va_gl``` [driver](https://github.com/i-rinat/libvdpau-va-gl). Change to ```LIBVA_DRIVER_NAME=i965``` and ```VDPAU_DRIVER=va_gl```. If that is not working, try ```LIBVA_DRIVER_NAME=iHD``` or comment out the first 3 export lines, exporting only ```LD_LIBRARY_PATH```.
-
-**Note:** The ```libvdpau-va-gl``` driver is only useful on Intel for software that doesn't use VAAPI, such as Adobe Flash. There are also applications that may use VAAPI better than VDPAU for which ```libva-vdpau-driver``` may be useful. The ```iHD``` driver is newer than the ```i965``` driver. To check which driver(s) work on your system and their codec support you can execute ```LIBVA_DRIVER_NAME=i965 vainfo``` and ```LIBVA_DRIVER_NAME=iHD vainfo```.
+The following is my Firefox config. Adjust the value for ```LIBVA_DRIVER_NAME``` accordingly.
 
 ```bash
 $ cat ~/.config/firefox.conf
 
 export LIBVA_DRIVERS_PATH=/usr/lib64/dri
-export LIBVA_DRIVER_NAME=vdpau
-export VDPAU_DRIVER=nvidia
+export LIBVA_DRIVER_NAME=nvidia
 export LD_LIBRARY_PATH=/opt/nvidia/lib64:/usr/local/lib
 
 if [ $XDG_SESSION_TYPE == wayland ]
@@ -118,7 +143,7 @@ export MOZ_WEBRENDER=1
 
 ## Firefox Settings
 
-Please find the minimum settings applied via ```about:config``` to enable hardware acceleration. The ```media.rdd-ffmpeg.enable``` setting must be enabled for h264ify to work with FFmpeg also supporting vp9. Basically, choose to play videos via the h264ify extension or the vp9 format by disabling h264ify and enjoy beyond 1080P playback.
+Below are the minimum settings applied via ```about:config``` to enable hardware acceleration. The ```media.rdd-ffmpeg.enable``` setting must be enabled for h264ify to work along with VP9. Basically, this allows you to choose to play videos via the h264ify extension or the VP9 format by disabling h264ify and enjoy beyond 1080P playback.
 
 ```text
 gfx.canvas.azure.accelerated                   true
@@ -153,22 +178,21 @@ media.navigator.mediadatadecoder_vpx_enabled   true
 
 ## Chromium Installation and Configuration
 
-[Chromium](https://dev.chromium.org/Home) is an open-source browser project. Some say a browser made for developers. Well, it's kind of nice. The [chromium-latest-linux](https://github.com/scheib/chromium-latest-linux) repository for launching Chromium works great including ```vp9``` video playback.
+[Chromium](https://dev.chromium.org/Home) is an open-source browser project. Some say a browser made for developers. The [chromium-latest-linux](https://github.com/scheib/chromium-latest-linux) repository for launching Chromium works great including ```VP9``` video playback. Unfortunately, the browswer lacks support for the H.264/ACC media format.
 
 **Edit run.sh**
 
-Insert lines exporting ```LIBVA_DRIVERS_PATH```, ```LIBVA_DRIVER_NAME```, ```VDPAU_DRIVER```, and ```LD_LIBRARY_PATH```. For Intel graphics, change to ```LIBVA_DRIVER_NAME=i965``` and ```VDPAU_DRIVER=va_gl```. If that is not working, as noted above try ```LIBVA_DRIVER_NAME=iHD``` or comment out the first 3 export lines, exporting only ```LD_LIBRARY_PATH```.
+Insert lines exporting ```LIBVA_DRIVERS_PATH```, ```LIBVA_DRIVER_NAME```, and ```LD_LIBRARY_PATH```. Adjust the value for ```LIBVA_DRIVER_NAME``` accordingly. Insert additional lines to rid of the ```Google API keys are missing``` notification.
 
-The ```Google API keys are missing``` notification can be annoying. Insert additional lines to rid of the notification.
+Decoding videos using hardware acceleration requires the ```--enable-features=VaapiVideoDecoder``` flag. In addition the ```--use-gl=egl``` or ```--use-gl=desktop``` flag is needed depending on runninng ```wayland``` or ```x11```. See the wiki at Arch Linux for optional flags (link at the bottom of the page).
 
-Finally, pass the ```--enable-features=VaapiVideoDecoder``` flag to decode videos using hardware acceleration.
+Opening new windows may be larger then the initial window. After a while, that can be annoying. The ```--window-size=x,y``` flag resolves that. Adjust the values in pixels to your liking.
 
 ```bash
 #! /bin/bash
 
 export LIBVA_DRIVERS_PATH=/usr/lib64/dri
-export LIBVA_DRIVER_NAME=vdpau
-export VDPAU_DRIVER=nvidia
+export LIBVA_DRIVER_NAME=nvidia
 export LD_LIBRARY_PATH=/opt/nvidia/lib64:/usr/local/lib
 
 # To rid of the Google API keys are missing notification.
@@ -178,7 +202,17 @@ export GOOGLE_DEFAULT_CLIENT_SECRET=no
 
 BASEDIR=$(dirname $0)
 
-$BASEDIR/latest/chrome --enable-features=VaapiVideoDecoder --user-data-dir="$BASEDIR/user-data-dir" $* &> /dev/null &
+if [ $XDG_SESSION_TYPE == wayland ]
+then
+    $BASEDIR/latest/chrome --window-size=1100,900 \
+        --use-gl=egl --enable-features=VaapiVideoDecoder \
+        --user-data-dir="$DATADIR" $* &> /dev/null &
+elif [ $XDG_SESSION_TYPE == x11 ]
+then
+    $BASEDIR/latest/chrome --window-size=1100,900 \
+        --use-gl=desktop --enable-features=VaapiVideoDecoder \
+        --user-data-dir="$DATADIR" $* &> /dev/null &
+fi
 ```
 
 **First time**
@@ -195,17 +229,61 @@ $ ./update-and-run.sh
 $ ./run.sh
 ```
 
-**Oddity**
+## Google Chrome Installation and Run Script
 
-Opening new windows may be larger then the initial window. That can be annoying after a while. Edit ```run.sh``` and add ```--window-size=x,y``` to the chrome line. Adjust ```x,y``` to your liking and restart Chromium. New windows now retain the same size.
+[Google Chrome](https://www.google.com/chrome/) is an open-source browser built by Google. You will find that the browser is quite fast. For NVIDIA hardware, one nicety is that video playback utilizes the Video Engine along with the GPU.
+
+The ```RPM``` file for Google Chrome can be found at [Google](https://www.google.com/chrome/) and [pkgs.org](https://pkgs.org/download/google-chrome). At the time of writing, I installed version 97.0.4692.71. **Note:** Installing Google Chrome will add the Google repository so your system will automatically keep Google Chrome up to date. If you don't want Google's repository, do ```sudo touch /etc/default/google-chrome``` before installing the package. Not knowing if this is true on Clear Linux, I'm choosing to check manually for updates periodically at pkgs.org.
 
 ```bash
-$BASEDIR/latest/chrome --window-size=1100,900 ...
+$ sudo mkdir -p /etc/default
+$ sudo touch /etc/default/google-chrome
+# Download from Google
+$ sudo rpm -ivh ~/Downloads/google-chrome-stable_current_x86_64.rpm
+# Download from pkgs.org
+$ sudo rpm -ivh ~/Downloads/google-chrome-stable-97.0.4692.71-1.x86_64.rpm --nodeps
+```
+
+**Run script**
+
+This resembles the script for Chromium. Be sure to adjust the value for ```LIBVA_DRIVER_NAME```. See the wiki at Arch Linux for optional flags (link at the bottom of the page).
+
+```bash
+#! /bin/bash
+#  filename: run-chrome.sh
+
+export LIBVA_DRIVERS_PATH=/usr/lib64/dri
+export LIBVA_DRIVER_NAME=nvidia
+export LD_LIBRARY_PATH=/opt/nvidia/lib64:/usr/local/lib
+
+if [ $XDG_SESSION_TYPE == wayland ]
+then
+    google-chrome-stable --window-size=1100,900 --use-gl=egl \
+        --enable-features=VaapiVideoDecoder $* &> /dev/null &
+elif [ $XDG_SESSION_TYPE == x11 ]
+then
+    google-chrome-stable --window-size=1100,900 --use-gl=desktop \
+        --enable-features=VaapiVideoDecoder $* &> /dev/null &
+fi
+```
+
+**Make executable**
+
+```bash
+$ chmod 755 run-chrome.sh
+```
+
+**Run**
+
+On first launch (just like with Chromium), you might want to go into ```Settings -> Appearance -> Customize fonts``` and change the fonts to your liking. On Clear Linux, Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans``` look great.
+
+```
+$ ./run-chrome.sh
 ```
 
 ## How can I make sure hardware acceleration is working?
 
-In Chromium, check ```chrome://gpu``` page. In Firefox, check ```about::support``` page. Another method is run a utility suited for your hardware while watching a video.
+In Chromium and Google Chrome, check the ```chrome://gpu``` page. In Firefox, check ```about::support``` page. Another way is run a utility suited for your hardware while watching a video.
 
 1. ```watch -n 1 /opt/nvidia/bin/nvidia-smi``` to check if "GPU-Util" percentage goes up
 2. ```sudo intel_gpu_top``` to check if percentage under the "Video" section goes up
@@ -215,9 +293,10 @@ In Chromium, check ```chrome://gpu``` page. In Firefox, check ```about::support`
 
 To play HDR videos, see ```youtube-play``` found in the extras folder.
 
-## See also, tips at Arch Linux
+## See also, Wikis at Arch Linux
 
-* [Chromium tips](https://wiki.archlinux.org/title/Chromium)
-* [Firefox tips](https://wiki.archlinux.org/title/Firefox)
+* [Chromium](https://wiki.archlinux.org/title/Chromium)
+* [Firefox](https://wiki.archlinux.org/title/Firefox)
+* [Google Chrome](https://wiki.archlinux.org/title/Google_chrome)
 * [Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration)
 
