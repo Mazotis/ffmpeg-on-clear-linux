@@ -176,7 +176,7 @@ Enable FFMPEG VA-API decoding support for WebRTC on Linux.
 media.navigator.mediadatadecoder_vpx_enabled   true
 ```
 
-## Chromium Installation and Configuration
+## Chromium installation and configuration
 
 [Chromium](https://dev.chromium.org/Home) is an open-source browser project. Some say it's a browser made for developers. The [chromium-latest-linux](https://github.com/scheib/chromium-latest-linux) repository for launching Chromium works great including VP9 video playback. Unfortunately, the browswer cannot decode H.264-ACC media.
 
