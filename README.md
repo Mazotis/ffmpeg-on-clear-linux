@@ -13,7 +13,7 @@ Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) incl
 * [Google Chrome installation and run script](#google-chrome-installation-and-run-script)
 * [Vivaldi installation and run script](#vivaldi-installation-and-run-script)
 * [How can I make sure hardware acceleration is working?](#how-can-i-make-sure-hardware-acceleration-is-working)
-* [HDR videos](#hdr-videos)
+* [Watch HDR videos](#watch-hdr-videos)
 * [See also](#see-also-annoucement-at-clear-linux-plus-wikis-at-arch-linux)
 
 ## What's included
@@ -353,7 +353,7 @@ In Chromium, Google Chrome, and Vivaldi, check the ```chrome://gpu``` page. In F
 2. ```sudo intel_gpu_top``` to check if percentage under the "Video" section goes up
 3. ```watch -n 1 sudo intel_gpu_frequency``` to check if the frequency goes up
 
-## HDR videos
+## Watch HDR videos
 
 To play HDR videos, see ```youtube-play``` found in the extras folder.
 
