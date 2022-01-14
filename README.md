@@ -2,8 +2,6 @@
 
 Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) including H.264 and VP9 hardware acceleration in Firefox, Google Chrome, and Vivaldi. Chromium can decode VP9, but not yet the media H.264-ACC format.
 
-This is an automation **how-to** for building FFmpeg and minimum dependencies. My motivation is nothing more than wanting hardware acceleration during video playback. Who doesn't want that? Thank you, @xtknight for the initial [VP9](https://github.com/xtknight/vdpau-va-driver-vp9) acceleration bits. Thank you also, @xuanruiqi for the [VP9-update](https://github.com/xuanruiqi/vdpau-va-driver-vp9) to include additional fixes.
-
 * [What's included](#whats-included)
 * [Requirements](#requirements)
 * [Building and installation](#building-and-installation)
@@ -19,6 +17,8 @@ This is an automation **how-to** for building FFmpeg and minimum dependencies. M
 * [See also](#see-also-annoucement-at-clear-linux-plus-wikis-at-arch-linux)
 
 ## What's included
+
+This is an automation **how-to** for building FFmpeg and minimum dependencies. My motivation is nothing more than wanting hardware acceleration during video playback. Who doesn't want that? Thank you, @xtknight for the initial [VP9](https://github.com/xtknight/vdpau-va-driver-vp9) acceleration bits. Thank you also, @xuanruiqi for the [VP9-update](https://github.com/xuanruiqi/vdpau-va-driver-vp9) to include additional fixes.
 
 ```text
 build-all  Top-level script for building dependencies and FFmpeg.
