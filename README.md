@@ -238,9 +238,9 @@ The ```RPM``` file for Google Chrome can be found at [Google](https://www.google
 ```bash
 $ sudo mkdir -p /etc/default
 $ sudo touch /etc/default/google-chrome
-# if downloaded file from Google
+# install file from Google (or)
 $ sudo rpm -ivh ~/Downloads/google-chrome-stable_current_x86_64.rpm --nodeps
-# if downloaded file from pkgs.org, version may differ over time
+# install file from pkgs.org, change version accordingly
 $ sudo rpm -ivh ~/Downloads/google-chrome-stable-97.0.4692.71-1.x86_64.rpm --nodeps
 ```
 
