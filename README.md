@@ -199,7 +199,7 @@ media.navigator.mediadatadecoder_vpx_enabled   true
 
 **Edit run.sh**
 
-Insert lines exporting ```LIBVA_DRIVERS_PATH```, ```LIBVA_DRIVER_NAME```, and ```LD_LIBRARY_PATH```. Adjust the value for ```LIBVA_DRIVER_NAME``` accordingly. Insert additional lines to rid of the ```Google API keys are missing``` notification.
+Insert lines exporting ```LIBVA_DRIVERS_PATH```, ```LIBVA_DRIVER_NAME```, ```LD_LIBRARY_PATH```, and ```FONTCONFIG_PATH```. Adjust the value for ```LIBVA_DRIVER_NAME``` accordingly. Insert additional lines to rid of the ```Google API keys are missing``` notification.
 
 Decoding videos using hardware acceleration requires the ```--enable-features=VaapiVideoDecoder``` flag. In addition the ```--use-gl=egl``` or ```--use-gl=desktop``` flag is needed depending on runninng ```wayland``` or ```x11```. See [wiki](https://wiki.archlinux.org/title/Chromium) at Arch Linux for optional flags.
 
@@ -211,6 +211,7 @@ Opening new windows may be larger then the initial window. After a while, that c
 export LIBVA_DRIVERS_PATH=/usr/lib64/dri
 export LIBVA_DRIVER_NAME=nvidia
 export LD_LIBRARY_PATH=/opt/nvidia/lib64:/usr/local/lib
+export FONTCONFIG_PATH=/usr/share/defaults/fonts
 
 # To rid of the Google API keys are missing notification.
 export GOOGLE_API_KEY=no
@@ -276,6 +277,7 @@ This resembles the run script for Chromium. Be sure to adjust the value for ```L
 export LIBVA_DRIVERS_PATH=/usr/lib64/dri
 export LIBVA_DRIVER_NAME=nvidia
 export LD_LIBRARY_PATH=/opt/nvidia/lib64:/usr/local/lib
+export FONTCONFIG_PATH=/usr/share/defaults/fonts
 
 if [ $XDG_SESSION_TYPE == wayland ]
 then
@@ -329,6 +331,7 @@ This resembles closely the Google Chrome run script. Be sure to adjust the value
 export LIBVA_DRIVERS_PATH=/usr/lib64/dri
 export LIBVA_DRIVER_NAME=nvidia
 export LD_LIBRARY_PATH=/opt/nvidia/lib64:/usr/local/lib
+export FONTCONFIG_PATH=/usr/share/defaults/fonts
 
 if [ $XDG_SESSION_TYPE == wayland ]
 then
@@ -382,6 +385,7 @@ This resembles closely the Google Chrome and Vivaldi run scripts. Yet another re
 export LIBVA_DRIVERS_PATH=/usr/lib64/dri
 export LIBVA_DRIVER_NAME=nvidia
 export LD_LIBRARY_PATH=/opt/nvidia/lib64:/usr/local/lib
+export FONTCONFIG_PATH=/usr/share/defaults/fonts
 
 if [ $XDG_SESSION_TYPE == wayland ]
 then
