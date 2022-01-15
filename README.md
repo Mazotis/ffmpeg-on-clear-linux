@@ -1,6 +1,6 @@
 # ffmpeg-on-clear-linux
 
-Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) including H.264 and VP9 hardware acceleration in Firefox, Google Chrome, and Vivaldi. Chromium can decode VP9, but not yet the media H.264-ACC format.
+Run [FFmpeg](https://ffmpeg.org/) in [Clear Linux](https://clearlinux.org/) to include H.264 and VP9 hardware acceleration for Brave, Firefox, Google Chrome, and Vivaldi. Chromium can decode VP9, but not yet the H.264-ACC media format.
 
 * [What's included](#whats-included)
 * [Requirements](#requirements)
@@ -12,6 +12,7 @@ Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) incl
 * [Chromium installation and configuration](#chromium-installation-and-configuration)
 * [Google Chrome installation and run script](#google-chrome-installation-and-run-script)
 * [Vivaldi installation and run script](#vivaldi-installation-and-run-script)
+* [Brave installation and run script](#brave-installation-and-run-script)
 * [Caveat with RPM package installation](#caveat-with-rpm-package-installation)
 * [How can I make sure hardware acceleration is working?](#how-can-i-make-sure-hardware-acceleration-is-working)
 * [Watch HDR videos](#watch-hdr-videos)
@@ -246,17 +247,19 @@ $ ./run.sh
 
 ## Google Chrome installation and run script
 
-[Google Chrome](https://www.google.com/chrome/) is an open-source browser built by Google. Imaging that! You will find that the browser is quite fast. For NVIDIA hardware, one nicety is that video playback utilizes the Video Engine along with the GPU. That is quite awesome and saves me 15 watts versus Chromium and Firefox.
+[Google Chrome](https://www.google.com/chrome/) is an open-source browser built by Google. You will find that the browser is quite fast. For NVIDIA hardware, one nicety is that video playback utilizes the Video Engine along with the GPU. That is quite awesome and saves me 15 watts versus Chromium and Firefox.
 
-The ```RPM``` file for Google Chrome can be found at [Google](https://www.google.com/chrome/) and [pkgs.org](https://pkgs.org/download/google-chrome). At the time of writing, I installed version 97.0.4692.71. **Note:** Installing Google Chrome will add the Google repository so your system will automatically keep Google Chrome up to date. If you don't want Google's repository, do ```sudo touch /etc/default/google-chrome``` before installing the package. Not knowing if this is true on Clear Linux, I'm choosing to check manually for updates periodically at pkgs.org.
+The ```RPM``` file for Google Chrome can be found at [Google](https://www.google.com/chrome/) and [pkgs.org](https://pkgs.org/download/google-chrome). At the time of writing, I installed version 97.0.4692.71.
+
+**Note:** Installing Google Chrome will add the Google repository so your system will automatically keep Google Chrome up to date. If you don't want Google's repository (which is what we want), do ```sudo touch /etc/default/google-chrome``` before installing the package. The reason is that the RPM pkg will not install without the ```--nodeps``` flag. Therefore, check for updates at pkgs.org, periodically.
+
 
 ```bash
-$ sudo mkdir -p /etc/default
-$ sudo touch /etc/default/google-chrome
+$ sudo mkdir -p /etc/default && sudo touch /etc/default/google-chrome
 # install file from Google (or)
-$ sudo rpm -ivh ~/Downloads/google-chrome-stable_current_x86_64.rpm --nodeps
+$ sudo rpm -Uvh --nodeps ~/Downloads/google-chrome-stable_current_x86_64.rpm
 # install file from pkgs.org, change version accordingly
-$ sudo rpm -ivh ~/Downloads/google-chrome-stable-97.0.4692.71-1.x86_64.rpm --nodeps
+$ sudo rpm -Uvh --nodeps ~/Downloads/google-chrome-stable-97.0.4692.71-1.x86_64.rpm
 ```
 
 **Create run script**
@@ -300,13 +303,14 @@ $ ./run-chrome.sh
 
 [Vivaldi](https://vivaldi.com) is yet another open-source browser. The main highlight is being able to communicate in a much more organized way, while keeping control of your data. That sounds delightful! For NVIDIA hardware, one nicety is that video playback also utilizes the Video Engine along with the GPU. This is similarly to Google Chrome.
 
-The ```RPM``` file for Vivaldi can be found at [Vivaldi](https://vivaldi.com/download/). At the time of writing, I installed version 5.0.2497.38. **Note:** Installing Vivaldi will add the Vivaldi repository so your system will automatically keep Vivaldi up to date. If you don't want Vivaldi's repository, do ```sudo touch /etc/default/vivaldi``` before installing the package. Not knowing if this is true on Clear Linux, I'm choosing to check manually for updates periodically at vivaldi.com.
+The ```RPM``` file for Vivaldi can be found at [Vivaldi](https://vivaldi.com/download/). At the time of writing, I installed version 5.0.2497.38.
+
+**Note:** Installing Vivaldi will add the Vivaldi repository so your system will automatically keep Vivaldi up to date. If you don't want Vivaldi's repository (which is what we want), do ```sudo touch /etc/default/vivaldi``` before installing the package. The reason is that the RPM pkg will not install without the ```--nodeps``` flag. Therefore, check for updates at vivaldi.com, periodically.
 
 ```bash
-$ sudo mkdir -p /etc/default
-$ sudo touch /etc/default/vivaldi
+$ sudo mkdir -p /etc/default && sudo touch /etc/default/vivaldi
 # install file from Vivaldi, change version accordingly
-$ sudo rpm -ivh ~/Downloads/vivaldi-stable-5.0.2497.38-1.x86_64.rpm --nodeps
+$ sudo rpm -Uvh --nodeps ~/Downloads/vivaldi-stable-5.0.2497.38-1.x86_64.rpm
 ```
 
 **Create run script**
@@ -346,21 +350,89 @@ On first launch, go into ```Settings -> Webpages -> Fonts``` and change the defa
 $ ./run-vivaldi.sh
 ```
 
+## Brave installation and run script
+
+[Brave](https://brave.com) is an open-source browser, reimagined. It claims three times faster than Chrome and better privacy than Firefox. Similarly to Google Chrome and Vivaldi, this too utilizes the Video Engine along with the GPU while watching a video (VP9 format).
+
+The ```RPM``` file for Brave can be found at [sourceforge.net](https://sourceforge.net/projects/brave-browser.mirror/files/). Go to [pkgs.org](https://pkgs.org/download/brave) and scroll to the bottom of the page. It will mention the current release version. At the time of writing, I installed version 1.34.80.
+
+**Note:** Installing Brave will add the Brave repository so your system will automatically keep Brave up to date. If you don't want Brave's repository (which is what we want), do ```sudo touch /etc/default/brave-browser``` before installing the package. The reason is that the RPM pkg will not install without the ```--nodeps``` flag. Therefore, check for updates at sourceforge.net, periodically.
+
+```bash
+$ sudo mkdir -p /etc/default && sudo touch /etc/default/brave-browser
+# install file from sourceforge.net, change version accordingly
+$ sudo rpm -Uvh --nodeps ~/Downloads/brave-browser-1.34.80-1.x86_64.rpm
+```
+
+**Create run script**
+
+This resembles closely the Google Chrome and Vivaldi run scripts. Yet another reminder, adjust the value for ```LIBVA_DRIVER_NAME```.
+
+```bash
+#! /bin/bash
+#  filename: run-brave.sh
+
+export LIBVA_DRIVERS_PATH=/usr/lib64/dri
+export LIBVA_DRIVER_NAME=nvidia
+export LD_LIBRARY_PATH=/opt/nvidia/lib64:/usr/local/lib
+
+if [ $XDG_SESSION_TYPE == wayland ]
+then
+    brave-browser-stable --window-size=1100,900 --use-gl=egl \
+        --enable-features=VaapiVideoDecoder $* &> /dev/null &
+elif [ $XDG_SESSION_TYPE == x11 ]
+then
+    brave-browser-stable --window-size=1100,900 --use-gl=desktop \
+        --enable-features=VaapiVideoDecoder $* &> /dev/null &
+fi
+```
+
+**Make executable**
+
+```bash
+$ chmod 755 run-brave.sh
+```
+
+**Run**
+
+On first launch, go into ```Settings -> Appearance -> Customize fonts``` and change the default fonts to your liking. On Clear Linux, Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans``` look great.
+
+```
+$ ./run-brave.sh
+```
+
 ## Caveat with RPM package installation
 
 It feels hacky on Clear Linux installing a RPM package that was built for another platform such as RedHat. This is my humble opinion. For piece of mind, check for missing library dependencies using the ```ldd``` utility. Ensure nothing is missing in the output. If true, then install missing packages with ```sudo swupd bundle-add PKGNAME```. Run ```sudo swupd search LIBNAME``` if needed.
 
-Another solution is building from source. This is likely not necessary, although becomes reality if unable to meet library dependencies. Uninstall the RPM with ```sudo rpm -e NAME```.
+Another solution is building from source. This is likely not necessary, although becomes reality if unable to meet library dependencies. Uninstall the browser with ```sudo rpm -e NAME```, given below.
 
 ```bash
 $ ldd ~/chromium-latest-linux-master/latest/chrome
 $ ldd /opt/google/chrome/chrome
 $ ldd /opt/vivaldi/vivaldi-bin
+$ ldd /opt/brave.com/brave/brave
+```
+
+For reference, uninstall commands. Optionally remove your browser data and settings. Though, be sure to export your booksmarks.
+
+```bash
+$ sudo rpm -e brave-browser && sudo rm -f /etc/default/brave-browser
+$ rm -fr ~/.cache/BraveSoftware/Brave-Browser
+$ rm -fr ~/.config/BraveSoftware/Brave-Browser (optional)
+
+$ sudo rpm -e google-chrome-stable && sudo rm -f /etc/default/google-chrome
+$ rm -fr ~/.cache/google-chrome
+$ rm -fr ~/.config/google-chrome (optional)
+
+$ sudo rpm -e vivaldi-stable && sudo rm -f /etc/default/vivaldi
+$ rm -fr ~/.cache/vivaldi
+$ rm -fr ~/.config/vivaldi (optional)
 ```
 
 ## How can I make sure hardware acceleration is working?
 
-In Chromium, Google Chrome, and Vivaldi, check the ```chrome://gpu``` page. In Firefox, check ```about::support``` page. Another way is running a utility suited for your hardware, while watching a video.
+In Brave, Chromium, Google Chrome, and Vivaldi, check the ```chrome://gpu``` page. In Firefox, check ```about::support``` page. Another way is running a utility suited for your hardware, while watching a video.
 
 1. ```watch -n 1 /opt/nvidia/bin/nvidia-smi``` to check if "GPU-Util" percentage goes up
 2. ```sudo intel_gpu_top``` to check if percentage under the "Video" section goes up
