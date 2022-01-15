@@ -234,7 +234,9 @@ fi
 
 **First time**
 
-On first launch, go into ```Settings -> Appearance -> Customize fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```. Optionally, go into ```Settings -> Advanced -> System``` and disable "Use hardware acceleration when available". This is helpful if the GPU is lacking or you want the desktop to remain fluid while watching a video, which the GPU is handling along with desktop composition.
+On first launch, go into ```Settings -> Appearance -> Customize fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```.
+
+Optionally, go into ```Settings -> Advanced -> System``` and disable "Use hardware acceleration when available". This is helpful if the GPU is lacking or you want the desktop to remain fluid while watching a video, which the GPU is handling along with desktop composition.
 
 ```bash
 $ ./update-and-run.sh
@@ -294,7 +296,9 @@ $ chmod 755 run-chrome.sh
 
 **Run**
 
-On first launch (just like with Chromium), you may want to go into ```Settings -> Appearance -> Customize fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```. Optionally, go into ```Settings -> Advanced -> System``` and disable "Use hardware acceleration when available". Like with Chromium, this is helpful if the GPU is lacking or you want the desktop to remain fluid while watching a video, which the GPU is handling along with desktop composition.
+On first launch (just like with Chromium), you may want to go into ```Settings -> Appearance -> Customize fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```.
+
+Optionally, go into ```Settings -> Advanced -> System``` and disable "Use hardware acceleration when available". Like with Chromium, this is helpful if the GPU is lacking or you want the desktop to remain fluid while watching a video, which the GPU is handling along with desktop composition.
 
 ```
 $ ./run-chrome.sh
@@ -345,7 +349,9 @@ $ chmod 755 run-vivaldi.sh
 
 **Run**
 
-On first launch, go into ```Settings -> Webpages -> Fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```. Optionally, go into ```Settings -> Webpages``` and uncheck "Use Hardware Acceleration When Available". This is helpful if the GPU is lacking or you want the desktop to remain fluid while watching a video, which the GPU is handling along with desktop composition.
+On first launch, go into ```Settings -> Webpages -> Fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```.
+
+Optionally, go into ```Settings -> Webpages``` and uncheck "Use Hardware Acceleration When Available". This is helpful if the GPU is lacking or you want the desktop to remain fluid while watching a video, which the GPU is handling along with desktop composition.
 
 ```
 $ ./run-vivaldi.sh
@@ -396,7 +402,9 @@ $ chmod 755 run-brave.sh
 
 **Run**
 
-On first launch, go into ```Settings -> Appearance -> Customize fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```. Optionally, go into ```Settings -> Additional settings -> System``` and disable "Use hardware acceleration when available". This is helpful if the GPU is lacking or you want the desktop to remain fluid while watching a video, which the GPU is handling along with desktop composition.
+On first launch, go into ```Settings -> Appearance -> Customize fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```.
+
+Optionally, go into ```Settings -> Additional settings -> System``` and disable "Use hardware acceleration when available". This is helpful if the GPU is lacking or you want the desktop to remain fluid while watching a video, which the GPU is handling along with desktop composition.
 
 ```
 $ ./run-brave.sh
