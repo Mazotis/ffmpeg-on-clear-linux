@@ -1,4 +1,4 @@
-# ffmpeg-on-clear-linux
+# ffmpeg-in-clear-linux
 
 Run [FFmpeg](https://ffmpeg.org/) in [Clear Linux](https://clearlinux.org/) including H.264 and VP9 playback on the GPU.
 
@@ -412,7 +412,7 @@ $ ./run-brave.sh
 
 ## Caveat with RPM package installation
 
-It feels hacky on Clear Linux installing a RPM package that was built for another platform such as RedHat. This is my humble opinion. For piece of mind, check for missing library dependencies using the ```ldd``` utility. Ensure nothing is missing in the output. If true, then install missing packages with ```sudo swupd bundle-add PKGNAME```. Run ```sudo swupd search LIBNAME``` if needed.
+It feels hacky in Clear Linux installing a RPM package that was built for another platform such as RedHat. This is my humble opinion. For piece of mind, check for missing library dependencies using the ```ldd``` utility. Ensure nothing is missing in the output. If true, then install missing packages with ```sudo swupd bundle-add PKGNAME```. Run ```sudo swupd search LIBNAME``` if needed.
 
 Another solution is building from source. This is likely not necessary, although becomes reality if unable to meet library dependencies. Uninstall the browser with ```sudo rpm -e NAME```, given below.
 
