@@ -1,6 +1,6 @@
 # ffmpeg-on-clear-linux
 
-Run [FFmpeg](https://ffmpeg.org/) in [Clear Linux](https://clearlinux.org/) to include H.264 and VP9 hardware acceleration for Brave, Firefox, Google Chrome, and Vivaldi. Chromium can decode VP9, but not yet the H.264-ACC media format.
+Run [FFmpeg](https://ffmpeg.org/) in [Clear Linux](https://clearlinux.org/) including H.264 and VP9 playback on the GPU.
 
 * [What's included](#whats-included)
 * [Requirements](#requirements)
