@@ -166,9 +166,9 @@ gfx.canvas.azure.accelerated                   true
 gfx.webrender.all                              true
 gfx.webrender.enabled                          true
 
-Enable software render if you prefer to render on the CPU instead of GPU.
-This is helpful if the GPU is lacking or you want the desktop to remain fluid
-while watching a video, which the GPU is handling along with desktop composition.
+Enable software render if you want to render on the CPU instead of GPU.
+This is helpful if you prefer the desktop to remain fluid while watching
+a video, which the GPU is handling along with desktop composition.
 gfx.webrender.software                         true
 
 Do not add xrender if missing or set to false or click on the trash icon.
@@ -236,7 +236,7 @@ fi
 
 On first launch, go into ```Settings -> Appearance -> Customize fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```.
 
-Optionally, go into ```Settings -> Advanced -> System``` and disable "Use hardware acceleration when available". This is helpful if the GPU is lacking or you want the desktop to remain fluid while watching a video, which the GPU is handling along with desktop composition.
+Optionally, go into ```Settings -> Advanced -> System``` and disable "Use hardware acceleration when available". This may be helpful if the GPU is lacking or prefer the CPU to handle videos.
 
 ```bash
 $ ./update-and-run.sh
@@ -298,7 +298,7 @@ $ chmod 755 run-chrome.sh
 
 On first launch (just like with Chromium), you may want to go into ```Settings -> Appearance -> Customize fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```.
 
-Optionally, go into ```Settings -> Advanced -> System``` and disable "Use hardware acceleration when available". Like with Chromium, this is helpful if the GPU is lacking or you want the desktop to remain fluid while watching a video, which the GPU is handling along with desktop composition.
+Optionally, go into ```Settings -> Advanced -> System``` and disable "Use hardware acceleration when available". Like with Chromium, this may be helpful if the GPU is lacking or prefer the CPU to handle videos.
 
 ```
 $ ./run-chrome.sh
@@ -351,7 +351,7 @@ $ chmod 755 run-vivaldi.sh
 
 On first launch, go into ```Settings -> Webpages -> Fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```.
 
-Optionally, go into ```Settings -> Webpages``` and uncheck "Use Hardware Acceleration When Available". This is helpful if the GPU is lacking or you want the desktop to remain fluid while watching a video, which the GPU is handling along with desktop composition.
+Optionally, go into ```Settings -> Webpages``` and uncheck "Use Hardware Acceleration When Available". This may be helpful if the GPU is lacking or prefer the CPU to handle videos.
 
 ```
 $ ./run-vivaldi.sh
@@ -404,7 +404,7 @@ $ chmod 755 run-brave.sh
 
 On first launch, go into ```Settings -> Appearance -> Customize fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```.
 
-Optionally, go into ```Settings -> Additional settings -> System``` and disable "Use hardware acceleration when available". Like with other Chromium-based browsers, this is helpful if the GPU is lacking or you want the desktop to remain fluid while watching a video, which the GPU is handling along with desktop composition.
+Optionally, go into ```Settings -> Additional settings -> System``` and disable "Use hardware acceleration when available". Like with other Chromium-based browsers, this may be helpful if the GPU is lacking or prefer the CPU to handle videos.
 
 ```
 $ ./run-brave.sh
