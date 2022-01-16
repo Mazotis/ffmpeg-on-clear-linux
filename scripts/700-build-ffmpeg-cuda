@@ -38,6 +38,12 @@ if [[ -d ${name} ]]; then
     cores=`grep -c '^cpu[0-9]' /proc/stat`
     cd ${name}
 
+    if [[ -f /opt/nvidia/bin/nvidia-settings ]]; then
+        vdpau="--enable-vdpau"
+    else
+        vdpau=""
+    fi
+
     ./configure \
         --prefix=/usr/local \
         --extra-cflags="-I/usr/local/include -I/usr/local/cuda/include" \
@@ -55,7 +61,7 @@ if [[ -d ${name} ]]; then
         --enable-libvpx --enable-libwebp --enable-libx264 --enable-libx265 \
         --enable-libxcb --enable-libxcb-shape --enable-libxcb-shm \
         --enable-libxcb-xfixes --enable-libxml2 --enable-libxvid \
-        --enable-opengl --enable-postproc --enable-sdl2 --enable-vaapi \
+        --enable-opengl --enable-postproc --enable-sdl2 --enable-vaapi $vdpau \
         --enable-zlib --enable-ffplay --enable-gpl --enable-nonfree \
         --enable-version3 --enable-cuda-nvcc --nvcc=/usr/local/cuda/bin/nvcc \
         --nvccflags="-gencode arch=${cudaarch},code=${cudacode} -O2 -m64 -ptx" \
