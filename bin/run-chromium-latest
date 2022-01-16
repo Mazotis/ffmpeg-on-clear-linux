@@ -1,0 +1,71 @@
+#! /bin/bash
+## Launch script for Chromium latest.
+
+BASEDIR="$HOME/chromium-latest-linux"
+DATADIR="$BASEDIR/user-data-dir"
+EXECCMD="$BASEDIR/latest/chrome"
+
+if [ ! -x "$EXECCMD" ]
+then
+    echo "ERROR: cannot access '$EXECCMD': No such executable"
+    exit 1
+fi
+
+# Rid of the "Google API keys are missing" notification.
+export GOOGLE_API_KEY=no
+export GOOGLE_DEFAULT_CLIENT_ID=no
+export GOOGLE_DEFAULT_CLIENT_SECRET=no
+
+# Generate a desktop file that will run this script.
+APPSDIR="$HOME/.local/share/applications"
+XDGICMD="/usr/bin/xdg-icon-resource"
+
+if [ ! -f "$APPSDIR/chromium-latest.desktop" ]
+then
+    $XDGICMD install --size 48 "$BASEDIR/latest/product_logo_48.png" "chromium-latest"
+    mkdir -p "$APPSDIR"
+    cat > "$APPSDIR/chromium-latest.desktop" << EOF
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Chromium
+GenericName=Web Browser
+Comment=Access the Internet
+Exec=/bin/bash -c "\$HOME/bin/run-chromium-latest %U"
+StartupNotify=false
+Terminal=false
+Icon=chromium-latest
+Type=Application
+Categories=Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml_xml;
+EOF
+fi
+
+# Launch browser.
+export FONTCONFIG_PATH=/usr/share/defaults/fonts
+export LIBVA_DRIVERS_PATH=/usr/lib64/dri
+export LIBVA_DRIVER_NAME=auto
+
+if [ -d /opt/nvidia/lib64 ] && [ -f $LIBVA_DRIVERS_PATH/nvidia_drv_video.so ]
+then
+    export LD_LIBRARY_PATH="/opt/nvidia/lib64:$LD_LIBRARY_PATH"
+    export LIBVA_DRIVER_NAME=nvidia
+fi
+
+WINDOW_WIDTH=1100
+WINDOW_HEIGHT=900
+
+if [ $XDG_SESSION_TYPE == wayland ]
+then
+    exec "$EXECCMD" --window-size=$WINDOW_WIDTH,$WINDOW_HEIGHT \
+        --disable-accelerated-2d-canvas --enable-smooth-scrolling \
+        --use-gl=egl --enable-features=VaapiVideoDecoder \
+        --user-data-dir="$DATADIR" $* &> /dev/null &
+elif [ $XDG_SESSION_TYPE == x11 ]
+then
+    exec "$EXECCMD" --window-size=$WINDOW_WIDTH,$WINDOW_HEIGHT \
+        --disable-accelerated-2d-canvas --enable-smooth-scrolling \
+        --use-gl=desktop --enable-features=VaapiVideoDecoder \
+        --user-data-dir="$DATADIR" $* &> /dev/null &
+fi
+

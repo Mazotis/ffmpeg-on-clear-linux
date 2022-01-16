@@ -1,0 +1,37 @@
+#! /bin/bash
+## Launch script for Vivaldi stable.
+
+EXECCMD=/opt/vivaldi/vivaldi
+
+if [ ! -x "$EXECCMD" ]
+then
+    echo "ERROR: cannot access '$EXECCMD': No such executable"
+    exit 1
+fi
+
+# Launch browser.
+export FONTCONFIG_PATH=/usr/share/defaults/fonts
+export LIBVA_DRIVERS_PATH=/usr/lib64/dri
+export LIBVA_DRIVER_NAME=auto
+
+if [ -d /opt/nvidia/lib64 ] && [ -f $LIBVA_DRIVERS_PATH/nvidia_drv_video.so ]
+then
+    export LD_LIBRARY_PATH="/opt/nvidia/lib64:$LD_LIBRARY_PATH"
+    export LIBVA_DRIVER_NAME=nvidia
+fi
+
+WINDOW_WIDTH=1100
+WINDOW_HEIGHT=900
+
+if [ $XDG_SESSION_TYPE == wayland ]
+then
+    exec "$EXECCMD" --window-size=$WINDOW_WIDTH,$WINDOW_HEIGHT \
+        --disable-accelerated-2d-canvas --enable-smooth-scrolling \
+        --use-gl=egl --enable-features=VaapiVideoDecoder $* &> /dev/null &
+elif [ $XDG_SESSION_TYPE == x11 ]
+then
+    exec "$EXECCMD" --window-size=$WINDOW_WIDTH,$WINDOW_HEIGHT \
+        --disable-accelerated-2d-canvas --enable-smooth-scrolling \
+        --use-gl=desktop --enable-features=VaapiVideoDecoder $* &> /dev/null &
+fi
+

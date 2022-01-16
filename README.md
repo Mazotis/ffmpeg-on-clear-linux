@@ -23,7 +23,9 @@ Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) incl
 This is an automation **how-to** for building FFmpeg and minimum dependencies. My motivation is nothing more than wanting hardware acceleration during video playback. Who doesn't want that? Thank you, @xtknight for the initial [VP9](https://github.com/xtknight/vdpau-va-driver-vp9) acceleration bits. Thank you also, @xuanruiqi for the [VP9-update](https://github.com/xuanruiqi/vdpau-va-driver-vp9) to include additional fixes.
 
 ```text
+bin        Browser launch scripts to be copied to $HOME/bin/.
 build-all  Top-level script for building dependencies and FFmpeg.
+desktop    Desktop files for $HOME/.local/share/applications/.
 extras     Complementary YouTube player for testing nvdec/nvenc.
 localenv   Set your NVIDIA GPU's CUDA compute capability here.
 scripts    Contains individual build-install scripts.
@@ -135,14 +137,20 @@ vainfo: Supported profile and entrypoints
 
 ## Firefox config file
 
-The following is my Firefox config. Adjust the value for ```LIBVA_DRIVER_NAME``` accordingly.
+The following is my Firefox config. Change the value for ```LIBVA_DRIVER_NAME``` or leave it ```auto```. The VA-API driver name is subsequently overridden and set automatically for NVIDIA.
 
 ```bash
 $ cat ~/.config/firefox.conf
 
+export LD_LIBRARY_PATH=/usr/local/lib
 export LIBVA_DRIVERS_PATH=/usr/lib64/dri
-export LIBVA_DRIVER_NAME=nvidia
-export LD_LIBRARY_PATH=/opt/nvidia/lib64:/usr/local/lib
+export LIBVA_DRIVER_NAME=auto
+
+if [ -d /opt/nvidia/lib64 ] && [ -f $LIBVA_DRIVERS_PATH/nvidia_drv_video.so ]
+then
+    export LD_LIBRARY_PATH="/opt/nvidia/lib64:$LD_LIBRARY_PATH"
+    export LIBVA_DRIVER_NAME=nvidia
+fi
 
 if [ $XDG_SESSION_TYPE == wayland ]
 then
@@ -199,118 +207,120 @@ media.navigator.mediadatadecoder_vpx_enabled   true
 
 [Chromium](https://dev.chromium.org/Home) is an open-source browser project. Some say it's a browser made for developers. The [chromium-latest-linux](https://github.com/scheib/chromium-latest-linux) repository works great for launching Chromium including VP9 media playback. Unfortunately, the browswer cannot decode H.264-ACC media.
 
-**Edit run.sh**
+**Installation**
 
-Insert lines exporting ```LIBVA_DRIVERS_PATH```, ```LIBVA_DRIVER_NAME```, ```LD_LIBRARY_PATH```, and ```FONTCONFIG_PATH```. Adjust the value for ```LIBVA_DRIVER_NAME``` accordingly. Insert additional lines to rid of the ```Google API keys are missing``` notification.
+Change directory to your home directory. The launch script for Chromium will look for the folder here. Run the update script initially and periodically to fetch the latest snapshot.
+
+```bash
+$ pushd $HOME
+$ git clone https://github.com/scheib/chromium-latest-linux.git
+$ cd chromium-latest-linux
+$ ./update.sh
+$ popd
+```
+
+**Edit ~/bin/run-chromium-latest**
+
+First, copy the run script to your ```bin``` folder.
+
+```bash
+$ mkdir -p ~/bin
+$ cp ~/Downloads/ffmpeg-on-clear-linux/bin/run-chromium-latest ~/bin/.
+```
+
+Scroll down towards the end of the file. Update the value for ```LIBVA_DRIVER_NAME``` or leave it ```auto```. Like with the Firefox config, the driver name is overridden and set automatically for NVIDIA.
+
+Opening new windows may be larger then the initial window. After a while, that can be annoying. The extra ```--window-size=x,y``` flag resolves that. Adjust the width and height (in pixels) to your liking. 2D canvas is configured to software only. Change the flag to ```--enable-accelerated-2d-canvas``` for accelerated 2D canvas.
 
 Decoding videos using hardware acceleration requires the ```--enable-features=VaapiVideoDecoder``` flag. In addition the ```--use-gl=egl``` or ```--use-gl=desktop``` flag is needed depending on runninng ```wayland``` or ```x11```. See [wiki](https://wiki.archlinux.org/title/Chromium) at Arch Linux for optional flags.
 
-Opening new windows may be larger then the initial window. After a while, that can be annoying. The extra ```--window-size=x,y``` flag resolves that. Adjust the values in pixels to your liking.
-
 ```bash
-#! /bin/bash
-
-export LIBVA_DRIVERS_PATH=/usr/lib64/dri
-export LIBVA_DRIVER_NAME=nvidia
-export LD_LIBRARY_PATH=/opt/nvidia/lib64:/usr/local/lib
+# Launch browser.
 export FONTCONFIG_PATH=/usr/share/defaults/fonts
+export LIBVA_DRIVERS_PATH=/usr/lib64/dri
+export LIBVA_DRIVER_NAME=auto
 
-# To rid of the Google API keys are missing notification.
-export GOOGLE_API_KEY=no
-export GOOGLE_DEFAULT_CLIENT_ID=no
-export GOOGLE_DEFAULT_CLIENT_SECRET=no
+if [ -d /opt/nvidia/lib64 ] && [ -f $LIBVA_DRIVERS_PATH/nvidia_drv_video.so ]
+then
+    export LD_LIBRARY_PATH="/opt/nvidia/lib64:$LD_LIBRARY_PATH"
+    export LIBVA_DRIVER_NAME=nvidia
+fi
 
-BASEDIR=$(dirname $0)
+WINDOW_WIDTH=1100
+WINDOW_HEIGHT=900
 
 if [ $XDG_SESSION_TYPE == wayland ]
 then
-    $BASEDIR/latest/chrome --window-size=1100,900 \
+    exec "$EXECCMD" --window-size=$WINDOW_WIDTH,$WINDOW_HEIGHT \
+        --disable-accelerated-2d-canvas --enable-smooth-scrolling \
         --use-gl=egl --enable-features=VaapiVideoDecoder \
         --user-data-dir="$DATADIR" $* &> /dev/null &
 elif [ $XDG_SESSION_TYPE == x11 ]
 then
-    $BASEDIR/latest/chrome --window-size=1100,900 \
+    exec "$EXECCMD" --window-size=$WINDOW_WIDTH,$WINDOW_HEIGHT \
+        --disable-accelerated-2d-canvas --enable-smooth-scrolling \
         --use-gl=desktop --enable-features=VaapiVideoDecoder \
         --user-data-dir="$DATADIR" $* &> /dev/null &
 fi
 ```
 
-**First time**
+**Run**
 
-On first launch, go into ```Settings -> Appearance -> Customize fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```.
+On first launch, go into ```Settings -> Appearance -> Customize fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```. Optionally, go into ```Settings -> Advanced -> System``` and disable "Use hardware acceleration when available". This may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
-Optionally, go into ```Settings -> Advanced -> System``` and disable "Use hardware acceleration when available". This may be helpful if the GPU is lacking or prefer the CPU to handle videos.
-
-```bash
-$ ./update-and-run.sh
-```
-
-**Subsequently**
+A desktop file is created the first time and stored in ```~/.local/share/applications```. Launching **Chromium** via Application Finder will also run this script.
 
 ```bash
-$ ./run.sh
+$ ~/bin/run-chromium-latest
 ```
 
 ## Google Chrome installation and run script
 
 [Google Chrome](https://www.google.com/chrome/) is a browser built by Google. You will find that the browser is quite fast. For NVIDIA hardware, one nicety is that video playback for VP9 media utilizes the Video Engine. That saves me 15 watts of power consumption versus Chromium and Firefox.
 
+**Installation**
+
 The ```RPM``` file for Google Chrome can be found at [Google](https://www.google.com/chrome/) and [pkgs.org](https://pkgs.org/download/google-chrome). At the time of writing, I installed version 97.0.4692.71.
 
 **Note:** Installing Google Chrome will add the Google repository so your system will automatically keep Google Chrome up to date. If you don't want Google's repository (which is what we want), do ```sudo touch /etc/default/google-chrome``` before installing the package. The reason is that the RPM pkg will not install without the ```--nodeps``` flag. Therefore, check for updates at pkgs.org, periodically.
 
+The ```-U``` flag to ```rpm``` installs newly package, otherwise upgrades the installed package.
 
 ```bash
 $ sudo mkdir -p /etc/default && sudo touch /etc/default/google-chrome
-# install file from Google (or)
-$ sudo rpm -Uvh --nodeps ~/Downloads/google-chrome-stable_current_x86_64.rpm
-# install file from pkgs.org, change version accordingly
-$ sudo rpm -Uvh --nodeps ~/Downloads/google-chrome-stable-97.0.4692.71-1.x86_64.rpm
+# install package from Google
+$ sudo rpm -Uvh --nodeps ~/Downloads/google-chrome-stable_current_x86_64.rpm 2>/dev/null
+# (or) install package from pkgs.org, change version accordingly
+$ sudo rpm -Uvh --nodeps ~/Downloads/google-chrome-stable-97.0.4692.71-1.x86_64.rpm 2>/dev/null
 ```
 
-**Create run script**
+**Edit ~/bin/run-chrome-stable**
 
-This resembles the run script for Chromium. Be sure to adjust the value for ```LIBVA_DRIVER_NAME```. See [wiki](https://wiki.archlinux.org/title/Google_chrome) at Arch Linux for optional flags.
-
-```bash
-#! /bin/bash
-#  filename: run-chrome.sh
-
-export LIBVA_DRIVERS_PATH=/usr/lib64/dri
-export LIBVA_DRIVER_NAME=nvidia
-export LD_LIBRARY_PATH=/opt/nvidia/lib64:/usr/local/lib
-export FONTCONFIG_PATH=/usr/share/defaults/fonts
-
-if [ $XDG_SESSION_TYPE == wayland ]
-then
-    google-chrome-stable --window-size=1100,900 --use-gl=egl \
-        --enable-features=VaapiVideoDecoder $* &> /dev/null &
-elif [ $XDG_SESSION_TYPE == x11 ]
-then
-    google-chrome-stable --window-size=1100,900 --use-gl=desktop \
-        --enable-features=VaapiVideoDecoder $* &> /dev/null &
-fi
-```
-
-**Make executable**
+Copy the run script and corresponding desktop file. Refer to the notes above for editing the run script.
 
 ```bash
-$ chmod 755 run-chrome.sh
+$ mkdir -p ~/bin && mkdir -p ~/.local/share/applications
+
+$ cp ~/Downloads/ffmpeg-on-clear-linux/bin/run-chrome-stable ~/bin/.
+$ cp ~/Downloads/ffmpeg-on-clear-linux/desktop/google-chrome.desktop \
+     ~/.local/share/applications/.
 ```
 
 **Run**
 
-On first launch (just like with Chromium), you may want to go into ```Settings -> Appearance -> Customize fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```.
+On first launch (just like with Chromium), you may want to go into ```Settings -> Appearance -> Customize fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```. Optionally, go into ```Settings -> Advanced -> System``` and disable "Use hardware acceleration when available". Like with Chromium, this may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
-Optionally, go into ```Settings -> Advanced -> System``` and disable "Use hardware acceleration when available". Like with Chromium, this may be helpful if the GPU is lacking or prefer the CPU to handle videos.
+Run Chrome using the command-line or search for "Google Chrome" in Application Finder.
 
 ```
-$ ./run-chrome.sh
+$ ~/bin/run-chrome-stable
 ```
 
 ## Vivaldi installation and run script
 
 [Vivaldi](https://vivaldi.com) is yet another open-source browser. The main highlight is being able to communicate in a much more organized way, while keeping control of your data. That sounds delightful! Similarly to Google Chrome, this also utilizes the Video Engine while watching VP9 media.
+
+**Installation**
 
 The ```RPM``` file for Vivaldi can be found at [Vivaldi](https://vivaldi.com/download/). At the time of writing, I installed version 5.0.2497.38.
 
@@ -318,53 +328,37 @@ The ```RPM``` file for Vivaldi can be found at [Vivaldi](https://vivaldi.com/dow
 
 ```bash
 $ sudo mkdir -p /etc/default && sudo touch /etc/default/vivaldi
-# install file from Vivaldi, change version accordingly
-$ sudo rpm -Uvh --nodeps ~/Downloads/vivaldi-stable-5.0.2497.38-1.x86_64.rpm
+# install package, change version accordingly
+$ sudo rpm -Uvh --nodeps ~/Downloads/vivaldi-stable-5.0.2497.38-1.x86_64.rpm 2>/dev/null
 ```
 
-**Create run script**
+**Edit ~/bin/run-vivaldi-stable**
 
-This resembles closely the Google Chrome run script. Be sure to adjust the value for ```LIBVA_DRIVER_NAME```.
-
-```bash
-#! /bin/bash
-#  filename: run-vivaldi.sh
-
-export LIBVA_DRIVERS_PATH=/usr/lib64/dri
-export LIBVA_DRIVER_NAME=nvidia
-export LD_LIBRARY_PATH=/opt/nvidia/lib64:/usr/local/lib
-export FONTCONFIG_PATH=/usr/share/defaults/fonts
-
-if [ $XDG_SESSION_TYPE == wayland ]
-then
-    vivaldi-stable --window-size=1100,900 --use-gl=egl \
-        --enable-features=VaapiVideoDecoder $* &> /dev/null &
-elif [ $XDG_SESSION_TYPE == x11 ]
-then
-    vivaldi-stable --window-size=1100,900 --use-gl=desktop \
-        --enable-features=VaapiVideoDecoder $* &> /dev/null &
-fi
-```
-
-**Make executable**
+Copy the run script and corresponding desktop file. See Chromium section above for editing the run script.
 
 ```bash
-$ chmod 755 run-vivaldi.sh
+$ mkdir -p ~/bin && mkdir -p ~/.local/share/applications
+
+$ cp ~/Downloads/ffmpeg-on-clear-linux/bin/run-vivaldi-stable ~/bin/.
+$ cp ~/Downloads/ffmpeg-on-clear-linux/desktop/vivaldi-stable.desktop \
+     ~/.local/share/applications/.
 ```
 
 **Run**
 
-On first launch, go into ```Settings -> Webpages -> Fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```.
+On first launch, go into ```Settings -> Webpages -> Fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```. Optionally, go into ```Settings -> Webpages``` and uncheck "Use Hardware Acceleration When Available". This may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
-Optionally, go into ```Settings -> Webpages``` and uncheck "Use Hardware Acceleration When Available". This may be helpful if the GPU is lacking or prefer the CPU to handle videos.
+It's your choice, run Vivaldi using the command-line or search for "Vivaldi" in Application Finder.
 
 ```
-$ ./run-vivaldi.sh
+$ ~/bin/run-vivaldi-stable
 ```
 
 ## Brave installation and run script
 
 [Brave](https://brave.com) is an open-source browser, reimagined. It claims three times faster than Google Chrome and better privacy than Firefox. Similarly to Google Chrome and Vivaldi, this too utilizes the Video Engine while watching VP9 media.
+
+**Installation**
 
 The ```RPM``` file for Brave can be found at [sourceforge.net](https://sourceforge.net/projects/brave-browser.mirror/files/). Go to [pkgs.org](https://pkgs.org/download/brave) and scroll to the bottom of the page. It will mention the current release version. At the time of writing, I installed version 1.34.80.
 
@@ -372,75 +366,60 @@ The ```RPM``` file for Brave can be found at [sourceforge.net](https://sourcefor
 
 ```bash
 $ sudo mkdir -p /etc/default && sudo touch /etc/default/brave-browser
-# install file from sourceforge.net, change version accordingly
-$ sudo rpm -Uvh --nodeps ~/Downloads/brave-browser-1.34.80-1.x86_64.rpm
+# install package, change version accordingly
+$ sudo rpm -Uvh --nodeps ~/Downloads/brave-browser-1.34.80-1.x86_64.rpm 2>/dev/null
 ```
 
-**Create run script**
+**Edit ~/bin/run-brave-stable**
 
-This resembles closely the Google Chrome and Vivaldi run scripts. Yet another reminder, adjust the value for ```LIBVA_DRIVER_NAME```.
-
-```bash
-#! /bin/bash
-#  filename: run-brave.sh
-
-export LIBVA_DRIVERS_PATH=/usr/lib64/dri
-export LIBVA_DRIVER_NAME=nvidia
-export LD_LIBRARY_PATH=/opt/nvidia/lib64:/usr/local/lib
-export FONTCONFIG_PATH=/usr/share/defaults/fonts
-
-if [ $XDG_SESSION_TYPE == wayland ]
-then
-    brave-browser-stable --window-size=1100,900 --use-gl=egl \
-        --enable-features=VaapiVideoDecoder $* &> /dev/null &
-elif [ $XDG_SESSION_TYPE == x11 ]
-then
-    brave-browser-stable --window-size=1100,900 --use-gl=desktop \
-        --enable-features=VaapiVideoDecoder $* &> /dev/null &
-fi
-```
-
-**Make executable**
+Copy the run script and corresponding desktop file. See Chromium section above for editing the run script.
 
 ```bash
-$ chmod 755 run-brave.sh
+$ mkdir -p ~/bin && mkdir -p ~/.local/share/applications
+
+$ cp ~/Downloads/ffmpeg-on-clear-linux/bin/run-brave-stable ~/bin/.
+$ cp ~/Downloads/ffmpeg-on-clear-linux/desktop/brave-browser.desktop \
+     ~/.local/share/applications/.
 ```
 
 **Run**
 
-On first launch, go into ```Settings -> Appearance -> Customize fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```.
+On first launch, go into ```Settings -> Appearance -> Customize fonts``` and change the default fonts to your liking. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```. Optionally, go into ```Settings -> Additional settings -> System``` and disable "Use hardware acceleration when available". Like with other Chromium-based browsers, this may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
-Optionally, go into ```Settings -> Additional settings -> System``` and disable "Use hardware acceleration when available". Like with other Chromium-based browsers, this may be helpful if the GPU is lacking or prefer the CPU to handle videos.
+At last, run Brave using the command-line or search for "Brave Web Browser" in Application Finder.
 
 ```
-$ ./run-brave.sh
+$ ~/bin/run-brave-stable
 ```
 
 ## Caveat with RPM package installation
 
-It feels hacky in Clear Linux installing a RPM package that was built for another platform such as RedHat. This is my humble opinion. For piece of mind, check for missing library dependencies using the ```ldd``` utility. Ensure nothing is missing in the output. If true, then install missing packages with ```sudo swupd bundle-add PKGNAME```. Run ```sudo swupd search LIBNAME``` if needed.
+It feels hacky in Clear Linux installing a RPM package that was built for another platform such as RedHat. For piece of mind, check for missing library dependencies using the ```ldd``` utility. Ensure nothing is missing in the output. If true, then install missing packages with ```sudo swupd bundle-add PKGNAME```. Run ```sudo swupd search LIBNAME``` if needed.
 
 Another solution is building from source. This is likely not necessary, although becomes reality if unable to meet library dependencies. Uninstall the browser with ```sudo rpm -e NAME```, given below.
 
 ```bash
-$ ldd ~/chromium-latest-linux-master/latest/chrome
-$ ldd /opt/google/chrome/chrome
-$ ldd /opt/vivaldi/vivaldi-bin
-$ ldd /opt/brave.com/brave/brave
+$ ldd ~/chromium-latest-linux/latest/chrome 2>/dev/null | grep "not found$"
+$ ldd /opt/brave.com/brave/brave 2>/dev/null | grep "not found$"
+$ ldd /opt/google/chrome/chrome 2>/dev/null | grep "not found$"
+$ ldd /opt/vivaldi/vivaldi-bin 2>/dev/null | grep "not found$"
 ```
 
 Hackiness aside, a benefit of using a RPM file for installation is that the package can be uninstalled easily. Optionally remove your browser data and settings. Though, be sure to export your bookmarks.
 
 ```bash
-$ sudo rpm -e brave-browser && sudo rm -f /etc/default/brave-browser
+$ sudo rpm -e brave-browser 2>/dev/null && sudo rm -f /etc/default/brave-browser
+$ rm -f ~/.local/share/applications/brave-browser.desktop
 $ rm -fr ~/.cache/BraveSoftware/Brave-Browser
 $ rm -fr ~/.config/BraveSoftware/Brave-Browser (optional)
 
-$ sudo rpm -e google-chrome-stable && sudo rm -f /etc/default/google-chrome
+$ sudo rpm -e google-chrome-stable 2>/dev/null && sudo rm -f /etc/default/google-chrome
+$ rm -f ~/.local/share/applications/google-chrome.desktop
 $ rm -fr ~/.cache/google-chrome
 $ rm -fr ~/.config/google-chrome (optional)
 
-$ sudo rpm -e vivaldi-stable && sudo rm -f /etc/default/vivaldi
+$ sudo rpm -e vivaldi-stable 2>/dev/null && sudo rm -f /etc/default/vivaldi
+$ rm -f ~/.local/share/applications/vivaldi-stable.desktop
 $ rm -fr ~/.cache/vivaldi
 $ rm -fr ~/.config/vivaldi (optional)
 ```
