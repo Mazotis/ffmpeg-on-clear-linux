@@ -16,7 +16,7 @@ Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) incl
 * [Caveat with RPM package installation](#caveat-with-rpm-package-installation)
 * [How can I make sure hardware acceleration is working?](#how-can-i-make-sure-hardware-acceleration-is-working)
 * [Watch HDR videos](#watch-hdr-videos)
-* [See also](#see-also-annoucement-at-clear-linux-plus-wikis-at-arch-linux)
+* [See also](#see-also-advert-at-clear-linux-and-wikis-at-arch-linux)
 
 ## What's included
 
@@ -457,12 +457,12 @@ In Brave, Chromium, Google Chrome, and Vivaldi, check the ```chrome://gpu``` pag
 
 To play HDR videos, see ```youtube-play``` found in the extras folder.
 
-## See also, annoucement at Clear Linux plus wikis at Arch Linux
+## See also, advert at Clear Linux and wikis at Arch Linux
 
 * [Annoucement and benchmarks](https://community.clearlinux.org/t/ffmpeg-supporting-h-264-and-vp9-hardware-acceleration-in-firefox/6148)
-* [Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration)
 * [Chromium](https://wiki.archlinux.org/title/Chromium)
 * [Firefox](https://wiki.archlinux.org/title/Firefox)
+* [Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration)
 * [Google Chrome](https://wiki.archlinux.org/title/Google_chrome)
 * [Vivaldi](https://wiki.archlinux.org/title/Vivaldi)
 
