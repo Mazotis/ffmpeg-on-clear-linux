@@ -6,7 +6,7 @@ Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) incl
 * [Requirements](#requirements)
 * [Building and installation](#building-and-installation)
 * [x264 and x265 multilibs](#x264-and-x265-multilibs)
-* [Determine the VAAPI driver to use](#determine-the-vaapi-driver-to-use)
+* [Determine the VA-API driver to use](#determine-the-va-api-driver-to-use)
 * [Firefox configuration](#firefox-configuration)
 * [Firefox settings](#firefox-settings)
 * [Chromium installation and configuration](#chromium-installation-and-configuration)
@@ -103,9 +103,11 @@ gbrp yuv420p10le yuv422p10le yuv444p10le gbrp10le yuv420p12le yuv422p12le
 yuv444p12le gbrp12le gray gray10le gray12le
 ```
 
-## Determine the VAAPI driver to use
+## Determine the VA-API driver to use
 
-For hardware acceleration to work, the browser may have the VAAPI driver built-in or you will need a suitable driver, i.e. ```ls /usr/lib64/dri/*_drv_video.so```. To be sure run ```vainfo``` in a terminal window. For AMD, try ```LIBVA_DRIVER_NAME=r600 vainfo``` or ```LIBVA_DRIVER_NAME=radeonsi vainfo```. For Intel, the ```iHD``` driver is newer. So check first ```LIBVA_DRIVER_NAME=iHD vainfo```. Otherwise, try ```LIBVA_DRIVER_NAME=i965 vainfo```. Below see captured output for the ```nvidia``` VAAPI driver.
+For hardware acceleration to work, the browser may have the VA-API driver built-in or you will need a suitable driver, i.e. ```ls /usr/lib64/dri/*_drv_video.so```. To be sure run ```vainfo``` in a terminal window. For AMD, try ```LIBVA_DRIVER_NAME=r600 vainfo``` or ```LIBVA_DRIVER_NAME=radeonsi vainfo```. For Intel, the ```iHD``` driver is newer. So check ```LIBVA_DRIVER_NAME=iHD vainfo``` or ```LIBVA_DRIVER_NAME=i965 vainfo```.
+
+Below see captured output for the NVIDIA VA-API driver.
 
 ```bash
 $ LIBVA_DRIVER_NAME=nvidia vainfo
