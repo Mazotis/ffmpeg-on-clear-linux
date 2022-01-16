@@ -251,7 +251,7 @@ $ ./run.sh
 
 ## Google Chrome installation and run script
 
-[Google Chrome](https://www.google.com/chrome/) is an open-source browser built by Google. You will find that the browser is quite fast. For NVIDIA hardware, one nicety is that video playback utilizes the Video Engine along with the GPU. That is quite awesome and saves me 15 watts versus Chromium and Firefox.
+[Google Chrome](https://www.google.com/chrome/) is a browser built by Google. You will find that the browser is quite fast. For NVIDIA hardware, one nicety is that video playback utilizes the Video Engine along with the GPU. That is quite awesome and saves me 15 watts versus Chromium and Firefox.
 
 The ```RPM``` file for Google Chrome can be found at [Google](https://www.google.com/chrome/) and [pkgs.org](https://pkgs.org/download/google-chrome). At the time of writing, I installed version 97.0.4692.71.
 
