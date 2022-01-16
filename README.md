@@ -159,7 +159,7 @@ export MOZ_WEBRENDER=1
 
 ## Firefox settings
 
-Below are the minimum settings applied via ```about:config``` to enable hardware acceleration. The ```media.rdd-ffmpeg.enable``` flag must be enabled for h264ify to work along with VP9. Basically, this allows you to choose to play videos via the h264ify extension or the VP9 format by disabling h264ify and enjoy beyond 1080P playback.
+Below are the minimum settings applied via ```about:config``` to enable hardware acceleration. The ```media.rdd-ffmpeg.enable``` flag must be enabled for h264ify to work along with VP9. Basically, this allows you to choose to play videos via the h264ify extension or VP9 media by disabling h264ify and enjoy beyond 1080P playback.
 
 ```text
 gfx.canvas.azure.accelerated                   true
@@ -195,7 +195,7 @@ media.navigator.mediadatadecoder_vpx_enabled   true
 
 ## Chromium installation and configuration
 
-[Chromium](https://dev.chromium.org/Home) is an open-source browser project. Some say it's a browser made for developers. The [chromium-latest-linux](https://github.com/scheib/chromium-latest-linux) repository for launching Chromium works great including VP9 video playback. Unfortunately, the browswer cannot decode H.264-ACC media.
+[Chromium](https://dev.chromium.org/Home) is an open-source browser project. Some say it's a browser made for developers. The [chromium-latest-linux](https://github.com/scheib/chromium-latest-linux) repository works great for launching Chromium including VP9 media playback. Unfortunately, the browswer cannot decode H.264-ACC media.
 
 **Edit run.sh**
 
@@ -251,7 +251,7 @@ $ ./run.sh
 
 ## Google Chrome installation and run script
 
-[Google Chrome](https://www.google.com/chrome/) is a browser built by Google. You will find that the browser is quite fast. For NVIDIA hardware, one nicety is that video playback utilizes the Video Engine along with the GPU. That is quite awesome and saves me 15 watts versus Chromium and Firefox.
+[Google Chrome](https://www.google.com/chrome/) is a browser built by Google. You will find that the browser is quite fast. For NVIDIA hardware, one nicety is that video playback for VP9 media utilizes the Video Engine. That saves me 15 watts of power consumption versus Chromium and Firefox.
 
 The ```RPM``` file for Google Chrome can be found at [Google](https://www.google.com/chrome/) and [pkgs.org](https://pkgs.org/download/google-chrome). At the time of writing, I installed version 97.0.4692.71.
 
@@ -308,7 +308,7 @@ $ ./run-chrome.sh
 
 ## Vivaldi installation and run script
 
-[Vivaldi](https://vivaldi.com) is yet another open-source browser. The main highlight is being able to communicate in a much more organized way, while keeping control of your data. That sounds delightful! For NVIDIA hardware, one nicety is that video playback also utilizes the Video Engine along with the GPU. This is similarly to Google Chrome.
+[Vivaldi](https://vivaldi.com) is yet another open-source browser. The main highlight is being able to communicate in a much more organized way, while keeping control of your data. That sounds delightful! Similarly to Google Chrome, this also utilizes the Video Engine while watching VP9 media.
 
 The ```RPM``` file for Vivaldi can be found at [Vivaldi](https://vivaldi.com/download/). At the time of writing, I installed version 5.0.2497.38.
 
@@ -362,7 +362,7 @@ $ ./run-vivaldi.sh
 
 ## Brave installation and run script
 
-[Brave](https://brave.com) is an open-source browser, reimagined. It claims three times faster than Chrome and better privacy than Firefox. Similarly to Google Chrome and Vivaldi, this too utilizes the Video Engine along with the GPU while watching a video (VP9 format).
+[Brave](https://brave.com) is an open-source browser, reimagined. It claims three times faster than Google Chrome and better privacy than Firefox. Similarly to Google Chrome and Vivaldi, this too utilizes the Video Engine while watching VP9 media.
 
 The ```RPM``` file for Brave can be found at [sourceforge.net](https://sourceforge.net/projects/brave-browser.mirror/files/). Go to [pkgs.org](https://pkgs.org/download/brave) and scroll to the bottom of the page. It will mention the current release version. At the time of writing, I installed version 1.34.80.
 
@@ -427,7 +427,7 @@ $ ldd /opt/vivaldi/vivaldi-bin
 $ ldd /opt/brave.com/brave/brave
 ```
 
-For reference, uninstall commands. Optionally remove your browser data and settings. Though, be sure to export your booksmarks.
+For reference, uninstall commands. Optionally remove your browser data and settings. Though, be sure to export your bookmarks.
 
 ```bash
 $ sudo rpm -e brave-browser && sudo rm -f /etc/default/brave-browser
@@ -445,7 +445,7 @@ $ rm -fr ~/.config/vivaldi (optional)
 
 ## How can I make sure hardware acceleration is working?
 
-In Brave, Chromium, Google Chrome, and Vivaldi, check the ```chrome://gpu``` page. In Firefox, check ```about::support``` page. Another way is running a utility suited for your hardware, while watching a video.
+In Brave, Chromium, Google Chrome, and Vivaldi, check the ```chrome://gpu``` page. In Firefox, check the ```about::support``` page. Another way is running a utility suited for your hardware while watching a video.
 
 1. ```watch -n 1 /opt/nvidia/bin/nvidia-smi``` to check if "GPU-Util" percentage goes up
 2. ```sudo intel_gpu_top``` to check if percentage under the "Video" section goes up
