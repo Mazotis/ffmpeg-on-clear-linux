@@ -80,7 +80,7 @@ Remember to add ```/usr/local/bin``` to your ```PATH``` environment variable if 
 
 ## Multiple libs in x264 and x265
 
-Below ```x264``` supports 8-bits and 10-bits output.
+The build scripts build each library independently. Below you will find that ```x264``` supports 8-bits and 10-bits output.
 
 ```bash
 $ x264 --help | grep "Output bit depth"
@@ -429,7 +429,7 @@ $ ldd /opt/vivaldi/vivaldi-bin
 $ ldd /opt/brave.com/brave/brave
 ```
 
-For reference, uninstall commands. Optionally remove your browser data and settings. Though, be sure to export your bookmarks.
+One benefit of using a RPM file for installation is that the package can be uninstalled easily. Optionally remove your browser data and settings. Though, be sure to export your bookmarks.
 
 ```bash
 $ sudo rpm -e brave-browser && sudo rm -f /etc/default/brave-browser
