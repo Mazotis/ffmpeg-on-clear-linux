@@ -5,8 +5,8 @@ Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) incl
 * [What's included](#whats-included)
 * [Requirements](#requirements)
 * [Building and installation](#building-and-installation)
-* [x264 and x265 multilibs](#x264-and-x265-multilibs)
-* [Determine the VA-API driver to use](#determine-the-va-api-driver-to-use)
+* [Multiple libs in x264 and x265](#multiple-libs-in-x264-and-x265)
+* [Determining the VA-API driver to use](#determining-the-va-api-driver-to-use)
 * [Firefox configuration](#firefox-configuration)
 * [Firefox settings](#firefox-settings)
 * [Chromium installation and configuration](#chromium-installation-and-configuration)
@@ -78,7 +78,7 @@ I'm hoping that the build process succeeds for you as it does for me. However, I
 
 Remember to add ```/usr/local/bin``` to your ```PATH``` environment variable if not already done, preferably before ```/usr/bin```.
 
-## x264 and x265 multilibs
+## Multiple libs in x264 and x265
 
 Below ```x264``` supports 8-bits and 10-bits output.
 
@@ -91,7 +91,7 @@ Supported pixel formats: yuv420p yuvj420p yuv422p yuvj422p yuv444p yuvj444p
 nv12 nv16 nv21 yuv420p10le yuv422p10le yuv444p10le nv20le gray gray10le
 ```
 
-Likewise x265 supports 8-bits, 10-bits and 12-bits output.
+Similarly x265 supports 8-bits, 10-bits and 12-bits output.
 
 ```bash
 $ x265 --help | grep "Output bit depth"
@@ -103,9 +103,9 @@ gbrp yuv420p10le yuv422p10le yuv444p10le gbrp10le yuv420p12le yuv422p12le
 yuv444p12le gbrp12le gray gray10le gray12le
 ```
 
-## Determine the VA-API driver to use
+## Determining the VA-API driver to use
 
-For hardware acceleration to work, the browser may have the VA-API driver built-in or you will need a suitable driver, i.e. ```ls /usr/lib64/dri/*_drv_video.so```. To be sure run ```vainfo``` in a terminal window. For AMD, try ```LIBVA_DRIVER_NAME=r600 vainfo``` or ```LIBVA_DRIVER_NAME=radeonsi vainfo```. For Intel, the ```iHD``` driver is newer. So check first ```LIBVA_DRIVER_NAME=iHD vainfo``` or try ```LIBVA_DRIVER_NAME=i965 vainfo```.
+For hardware acceleration to work, the browser may have the VA-API driver built-in or you will need a suitable driver, i.e. ```ls /usr/lib64/dri/*_drv_video.so```. To be sure run ```vainfo``` in a terminal window. For AMD try ```LIBVA_DRIVER_NAME=r600 vainfo``` or ```LIBVA_DRIVER_NAME=radeonsi vainfo```. For Intel the ```iHD``` driver is newer. So check first ```LIBVA_DRIVER_NAME=iHD vainfo``` or try ```LIBVA_DRIVER_NAME=i965 vainfo```.
 
 Below see captured output for the NVIDIA VA-API driver.
 
