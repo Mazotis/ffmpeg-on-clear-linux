@@ -459,10 +459,10 @@ To play HDR videos, see ```youtube-play``` found in the extras folder.
 
 ## See also, advert at Clear Linux and wikis at Arch Linux
 
-* [Annoucement and benchmarks](https://community.clearlinux.org/t/ffmpeg-supporting-h-264-and-vp9-hardware-acceleration-in-firefox/6148)
+* [Annoucement and benchmark results](https://community.clearlinux.org/t/ffmpeg-supporting-h-264-and-vp9-hardware-acceleration-in-firefox/6148)
 * [Chromium](https://wiki.archlinux.org/title/Chromium)
 * [Firefox](https://wiki.archlinux.org/title/Firefox)
-* [Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration)
 * [Google Chrome](https://wiki.archlinux.org/title/Google_chrome)
+* [Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration)
 * [Vivaldi](https://wiki.archlinux.org/title/Vivaldi)
 
