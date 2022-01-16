@@ -137,7 +137,7 @@ vainfo: Supported profile and entrypoints
 
 ## Firefox config file
 
-The following is my Firefox config. Change the value for ```LIBVA_DRIVER_NAME``` or leave it ```auto```. The VA-API driver name is subsequently overridden and set automatically for NVIDIA.
+The following is my Firefox config. Update the value for ```LIBVA_DRIVER_NAME``` or leave it ```auto```. Subsequently, the driver name is overridden automatically for NVIDIA hardware.
 
 ```bash
 $ cat ~/.config/firefox.conf
@@ -228,7 +228,7 @@ $ mkdir -p ~/bin
 $ cp ~/Downloads/ffmpeg-on-clear-linux/bin/run-chromium-latest ~/bin/.
 ```
 
-Scroll down towards the end of the file. Update the value for ```LIBVA_DRIVER_NAME``` or leave it ```auto```. Like with the Firefox config, the driver name is overridden and set automatically for NVIDIA.
+Scroll down towards the end of the file. Update the value for ```LIBVA_DRIVER_NAME``` or leave it ```auto```. Either way, the driver name is overridden automatically for NVIDIA hardware.
 
 Opening new windows may be larger then the initial window. After a while, that can be annoying. The extra ```--window-size=x,y``` flag resolves that. Adjust the width and height (in pixels) to your liking. 2D canvas is configured to software only. Change the flag to ```--enable-accelerated-2d-canvas``` for accelerated 2D canvas.
 
