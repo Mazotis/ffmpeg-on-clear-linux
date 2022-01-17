@@ -332,6 +332,7 @@ The ```RPM``` file for Vivaldi can be found at [Vivaldi](https://vivaldi.com/dow
 
 ```bash
 $ sudo mkdir -p /etc/default && sudo touch /etc/default/vivaldi
+
 # install package, change version accordingly
 $ sudo rpm -Uvh --nodeps \
     ~/Downloads/vivaldi-stable-5.0.2497.38-1.x86_64.rpm 2>/dev/null
@@ -371,6 +372,7 @@ The ```RPM``` file for Brave can be found at [sourceforge.net](https://sourcefor
 
 ```bash
 $ sudo mkdir -p /etc/default && sudo touch /etc/default/brave-browser
+
 # install package, change version accordingly
 $ sudo rpm -Uvh --nodeps \
     ~/Downloads/brave-browser-1.34.80-1.x86_64.rpm 2>/dev/null
