@@ -228,7 +228,7 @@ $ mkdir -p ~/bin
 $ cp ~/Downloads/ffmpeg-on-clear-linux/bin/run-chromium-latest ~/bin/.
 ```
 
-Scroll down towards the end of the file. Update the value for ```LIBVA_DRIVER_NAME``` or leave it ```auto```. Subsequently, the driver name is overridden automatically for NVIDIA hardware.
+Scroll down towards the end of the file. Update the value for ```LIBVA_DRIVER_NAME``` or leave it ```auto```. Like in the Firefox config, the driver name is overridden automatically for NVIDIA hardware.
 
 Opening new windows may be larger then the initial window. After a while, that can be annoying. The extra ```--window-size=x,y``` flag resolves this issue. Adjust the width and height (in pixels) to your liking. 2D canvas is configured to software only via a flag. Change to ```--enable-accelerated-2d-canvas``` for accelerated 2D canvas.
 
@@ -282,9 +282,9 @@ $ ~/bin/run-chromium-latest
 
 The ```RPM``` file for Google Chrome can be found at [Google](https://www.google.com/chrome/) and [pkgs.org](https://pkgs.org/download/google-chrome). At the time of writing, I installed version 97.0.4692.71.
 
-**Note:** Installing Google Chrome will add the Google repository so your system will automatically keep Google Chrome up to date. If you don't want Google's repository (which is what we want), do ```sudo touch /etc/default/google-chrome``` before installing the package. The reason is that the RPM pkg will not install without the ```--nodeps``` flag.
+**Note:** Installing Google Chrome will add the Google repository so your system will automatically keep Google Chrome up to date. If you don't want Google's repository (which is what we want), do ```sudo touch /etc/default/google-chrome``` before installing the package. The reason is the package will fail auto-install without the ```--nodeps``` flag.
 
-The ```-U``` flag to ```rpm``` installs the newly package, otherwise upgrades the installed package. Periodically, obtain the current stable release and run the RPM command (two steps).
+The ```-U``` flag to ```rpm``` installs the newly package, otherwise upgrades the installed package. Periodically, obtain the current stable release and run the ```rpm``` command.
 
 ```bash
 $ sudo mkdir -p /etc/default && sudo touch /etc/default/google-chrome
@@ -300,7 +300,7 @@ $ sudo rpm -Uvh --nodeps \
 
 **Edit ~/bin/run-chrome-stable**
 
-Copy the launch script and corresponding desktop file. Refer to the notes above for editing the script.
+Copy the launch script and corresponding desktop file. Refer to the notes above for editing the script i.e. ```LIBVA_DRIVER_NAME```, et al.
 
 ```bash
 $ mkdir -p ~/bin && mkdir -p ~/.local/share/applications
@@ -328,9 +328,9 @@ $ ~/bin/run-chrome-stable
 
 The ```RPM``` file for Vivaldi can be found at [Vivaldi](https://vivaldi.com/download/). At the time of writing, I installed version 5.0.2497.38.
 
-**Note:** Installing Vivaldi will add the Vivaldi repository so your system will automatically keep Vivaldi up to date. If you don't want Vivaldi's repository (which is what we want), do ```sudo touch /etc/default/vivaldi``` before installing the package. The reason is that the RPM pkg will not install without the ```--nodeps``` flag.
+**Note:** Installing Vivaldi will add the Vivaldi repository so your system will automatically keep Vivaldi up to date. If you don't want Vivaldi's repository (which is what we want), do ```sudo touch /etc/default/vivaldi``` before installing the package. The reason is the package will fail auto-install without the ```--nodeps``` flag.
 
-The ```-U``` flag to ```rpm``` installs the newly package, otherwise upgrades the installed package. Periodically, obtain the current stable release and run the RPM command (two steps).
+The ```-U``` flag to ```rpm``` installs the newly package, otherwise upgrades the installed package. Periodically, obtain the current stable release and run the ```rpm``` command.
 
 ```bash
 $ sudo mkdir -p /etc/default && sudo touch /etc/default/vivaldi
@@ -342,7 +342,7 @@ $ sudo rpm -Uvh --nodeps \
 
 **Edit ~/bin/run-vivaldi-stable**
 
-Copy the launch script and corresponding desktop file. See Chromium section above for editing the script.
+Copy the launch script and corresponding desktop file. See Chromium section above for editing the script i.e. ```LIBVA_DRIVER_NAME```, et al.
 
 ```bash
 $ mkdir -p ~/bin && mkdir -p ~/.local/share/applications
@@ -370,9 +370,9 @@ $ ~/bin/run-vivaldi-stable
 
 The ```RPM``` file for Brave can be found at [sourceforge.net](https://sourceforge.net/projects/brave-browser.mirror/files/). Go to [pkgs.org](https://pkgs.org/download/brave) and scroll to the bottom of the page. It will mention the current release version. At the time of writing, I installed version 1.34.80.
 
-**Note:** Installing Brave will add the Brave repository so your system will automatically keep Brave up to date. If you don't want Brave's repository (which is what we want), do ```sudo touch /etc/default/brave-browser``` before installing the package. The reason is that the RPM pkg will not install without the ```--nodeps``` flag.
+**Note:** Installing Brave will add the Brave repository so your system will automatically keep Brave up to date. If you don't want Brave's repository (which is what we want), do ```sudo touch /etc/default/brave-browser``` before installing the package. The reason is the package will fail auto-install without the ```--nodeps``` flag.
 
-The ```-U``` flag to ```rpm``` installs the newly package, otherwise upgrades the installed package. Periodically, obtain the current stable release and run the RPM command (two steps).
+The ```-U``` flag to ```rpm``` installs the newly package, otherwise upgrades the installed package. Periodically, obtain the current stable release and run the ```rpm``` command.
 
 ```bash
 $ sudo mkdir -p /etc/default && sudo touch /etc/default/brave-browser
@@ -384,7 +384,7 @@ $ sudo rpm -Uvh --nodeps \
 
 **Edit ~/bin/run-brave-stable**
 
-Copy the launch script and corresponding desktop file. See Chromium section above for editing the script.
+Copy the launch script and corresponding desktop file. See Chromium section above for editing the script i.e. ```LIBVA_DRIVER_NAME```, et al.
 
 ```bash
 $ mkdir -p ~/bin && mkdir -p ~/.local/share/applications
@@ -406,7 +406,7 @@ $ ~/bin/run-brave-stable
 
 ## Caveat with RPM package installation
 
-It feels hacky in Clear Linux installing a RPM package that was built for another platform such as RedHat. For piece of mind, check for missing library dependencies using the ```ldd``` utility. Ensure nothing is missing in the output. If true, then install missing packages with ```sudo swupd bundle-add PKGNAME```. Run ```sudo swupd search LIBNAME``` if needed.
+It feels hacky in Clear Linux installing a package that was built for another platform such as RedHat. For piece of mind, check for missing library dependencies using the ```ldd``` utility. Ensure nothing is missing in the output. If true, then install missing packages with ```sudo swupd bundle-add PKGNAME```. Run ```sudo swupd search LIBNAME``` if needed.
 
 Another solution is building from source. This is likely not necessary, although becomes reality if unable to meet library dependencies. Uninstall the browser with ```sudo rpm -e NAME```, given below.
 
@@ -417,7 +417,7 @@ $ ldd /opt/google/chrome/chrome 2>/dev/null | grep "not found$"
 $ ldd /opt/vivaldi/vivaldi-bin 2>/dev/null | grep "not found$"
 ```
 
-Hackiness aside, a benefit of using a RPM file for installation is that the package can be uninstalled easily. Optionally remove your browser data and settings. Though, be sure to export your bookmarks.
+Hackiness aside, a benefit of using a package for installation is that the package can be uninstalled easily. Optionally remove your browser data and settings. Though, be sure to export your bookmarks.
 
 ```bash
 # Brave
