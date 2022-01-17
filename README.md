@@ -42,7 +42,7 @@ cudaarch="compute_75"  # Turing
 cudacode="sm_75"
 ```
 
-Optionally, enable ```ForceCompositionPipeline``` for a better desktop experience, especially when moving-resizing a terminal window while playing a video. This can be done at the device level by adding-or-editing a file ```/etc/X11/xorg.conf.d/nvidia-device.conf```. Replace ```MODEL_STRING``` with your actual GPU model (i.e. GTX 1660). Finally reboot for the change to take effect.
+Optionally enable ```ForceCompositionPipeline``` for a better desktop experience, especially when moving-resizing a terminal window while playing a video. This can be done at the device level by adding-or-editing a file ```/etc/X11/xorg.conf.d/nvidia-device.conf```. Replace ```MODEL_STRING``` with your actual GPU model (i.e. GTX 1660). Finally reboot for the change to take effect.
 
 ```text
 Section "Device"
@@ -209,7 +209,7 @@ media.navigator.mediadatadecoder_vpx_enabled   true
 
 **Installation**
 
-Change directory to your home directory. The launch script for Chromium will look for the folder here. Run the ``update.sh``` script initially and periodically to fetch the latest snapshot. The other two scripts ```update-and-run.sh``` and ```run-chrome.sh``` are not used.
+Change directory to your home directory. The launch script for Chromium will look for the folder here. Run the ```update.sh``` script initially and periodically to fetch the latest snapshot. The other scripts ```update-and-run.sh``` and ```run-chrome.sh``` are not used.
 
 ```bash
 $ pushd $HOME
