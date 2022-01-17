@@ -150,6 +150,9 @@ if [[ -d /opt/nvidia/lib64 && -f $LIBVA_DRIVERS_PATH/nvidia_drv_video.so ]]
 then
     export LD_LIBRARY_PATH="/opt/nvidia/lib64:$LD_LIBRARY_PATH"
     export LIBVA_DRIVER_NAME=nvidia
+    # Add VDPAU or NVDEC hardware decoding support on Linux
+    # https://bugzilla.mozilla.org/show_bug.cgi?id=1210729
+    # It doesn't seem likely, maybe one day they will do it
     export VDPAU_DRIVER=nvidia
 fi
 
