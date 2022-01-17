@@ -221,7 +221,7 @@ $ popd
 
 **Edit ~/bin/run-chromium-latest**
 
-First, copy the run script to your ```bin``` folder.
+First copy the run script to your ```bin``` folder.
 
 ```bash
 $ mkdir -p ~/bin
