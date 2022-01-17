@@ -426,14 +426,18 @@ $ sudo rm -f /etc/default/brave-browser
 $ rm -f ~/.local/share/applications/brave-browser.desktop
 $ rm -fr ~/.cache/BraveSoftware/Brave-Browser
 $ rm -fr ~/.config/BraveSoftware/Brave-Browser  (optional)
+```
 
+```bash
 # Google Chrome
 $ sudo rpm -e google-chrome-stable 2>/dev/null
 $ sudo rm -f /etc/default/google-chrome
 $ rm -f ~/.local/share/applications/google-chrome.desktop
 $ rm -fr ~/.cache/google-chrome
 $ rm -fr ~/.config/google-chrome  (optional)
+```
 
+```bash
 # Vivaldi
 $ sudo rpm -e vivaldi-stable 2>/dev/null
 $ sudo rm -f /etc/default/vivaldi
