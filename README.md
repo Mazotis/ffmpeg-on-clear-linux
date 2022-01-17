@@ -33,7 +33,7 @@ scripts    Contains individual build-install scripts.
 
 ## Requirements
 
-Although testing was done using a NVIDIA GPU, the Intel(R) Media SDK is included during the build process. For NVIDIA GPUs, this requires the proprietary driver to be installed under ```/opt/nvidia```. Well, that's the recommended way in Clear Linux. Optionally install CUDA for extra hardware acceleration capabilities. See installation guides [NVIDIA Drivers](https://docs.01.org/clearlinux/latest/tutorials/nvidia.html) and [NVIDIA CUDA Toolkit](https://docs.01.org/clearlinux/latest/tutorials/nvidia-cuda.html).
+Although testing was done using a NVIDIA GPU, the Intel(R) Media SDK is included during the build process. For NVIDIA GPUs, this requires the proprietary driver to be installed under ```/opt/nvidia```. Optionally install CUDA for extra hardware acceleration capabilities. See installation guides [NVIDIA Drivers](https://docs.01.org/clearlinux/latest/tutorials/nvidia.html) and [NVIDIA CUDA Toolkit](https://docs.01.org/clearlinux/latest/tutorials/nvidia-cuda.html) at Clear Linux.
 
 Set your GPU's [compute capability](https://en.wikipedia.org/wiki/CUDA) in ```localenv```. The file resides at the top-level and is ignored by Git. For example, the GeForce GTX 1660 model supports max ```7.5``` compute capability. Omit this step is using a non-NVIDIA GPU.
 
@@ -107,9 +107,9 @@ yuv444p12le gbrp12le gray gray10le gray12le
 
 ## Determining the VA-API driver to use
 
-For hardware acceleration to work, the browser may have the VA-API driver built-in or you will need a suitable driver, i.e. ```ls /usr/lib64/dri/*_drv_video.so```. To be sure run ```vainfo``` in a terminal window. For AMD try ```LIBVA_DRIVER_NAME=r600 vainfo``` or ```LIBVA_DRIVER_NAME=radeonsi vainfo```. For Intel the ```iHD``` driver is newer. So check first ```LIBVA_DRIVER_NAME=iHD vainfo``` or try ```LIBVA_DRIVER_NAME=i965 vainfo```.
+For hardware acceleration to work, the browser may have the driver built-in or you will need a suitable driver, i.e. ```ls /usr/lib64/dri/*_drv_video.so```. To be sure run ```vainfo``` in a terminal window. For AMD try ```LIBVA_DRIVER_NAME=r600 vainfo``` or ```LIBVA_DRIVER_NAME=radeonsi vainfo```. For Intel the ```iHD``` driver is newer. So check first ```LIBVA_DRIVER_NAME=iHD vainfo``` or try ```LIBVA_DRIVER_NAME=i965 vainfo```.
 
-Below see captured output for the NVIDIA VA-API driver.
+Below see captured output for the NVIDIA driver.
 
 ```bash
 $ LIBVA_DRIVER_NAME=nvidia vainfo
@@ -228,7 +228,7 @@ $ mkdir -p ~/bin
 $ cp ~/Downloads/ffmpeg-on-clear-linux/bin/run-chromium-latest ~/bin/.
 ```
 
-Scroll down towards the end of the file. Update the value for ```LIBVA_DRIVER_NAME``` or leave it ```auto```. Like in the Firefox config, the driver name is overridden automatically for NVIDIA hardware.
+Scroll down towards the end of the file. Update the value for ```LIBVA_DRIVER_NAME``` or leave it ```auto```. The driver name is overridden automatically for NVIDIA hardware.
 
 Opening new windows may be larger then the initial window. After a while, that can be annoying. The extra ```--window-size=x,y``` flag resolves this issue. Adjust the width and height (in pixels) to your liking. 2D canvas is configured to software only via a flag. Change to ```--enable-accelerated-2d-canvas``` for accelerated 2D canvas.
 
@@ -264,7 +264,7 @@ then
 fi
 ```
 
-**Run**
+**Running**
 
 On first launch, go into ```Settings -> Appearance -> Customize fonts``` and change the fonts. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```. Optionally, go into ```Settings -> Advanced -> System``` and disable "Use hardware acceleration when available". This may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
@@ -284,7 +284,7 @@ The ```RPM``` file for Google Chrome can be found at [Google](https://www.google
 
 **Note:** Installing Google Chrome will add the Google repository so your system will automatically keep Google Chrome up to date. If you don't want Google's repository (which is what we want), do ```sudo touch /etc/default/google-chrome``` before installing the package. The reason is the package will fail auto-install without the ```--nodeps``` flag.
 
-The ```-U``` flag to ```rpm``` installs the newly package, otherwise upgrades the installed package. Periodically, obtain the current stable release and run the ```rpm``` command.
+The ```-U``` flag to ```rpm``` installs the newly package, otherwise upgrades the installed package. Periodically, obtain the current stable release and run the ```rpm``` command as shown.
 
 ```bash
 $ sudo mkdir -p /etc/default && sudo touch /etc/default/google-chrome
@@ -310,7 +310,7 @@ $ cp ~/Downloads/ffmpeg-on-clear-linux/desktop/google-chrome.desktop \
        ~/.local/share/applications/.
 ```
 
-**Run**
+**Running**
 
 On first launch (just like with Chromium), you may want to go into ```Settings -> Appearance -> Customize fonts``` and change the fonts. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```. Optionally, go into ```Settings -> Advanced -> System``` and disable "Use hardware acceleration when available". Like with Chromium, this may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
@@ -330,7 +330,7 @@ The ```RPM``` file for Vivaldi can be found at [Vivaldi](https://vivaldi.com/dow
 
 **Note:** Installing Vivaldi will add the Vivaldi repository so your system will automatically keep Vivaldi up to date. If you don't want Vivaldi's repository (which is what we want), do ```sudo touch /etc/default/vivaldi``` before installing the package. The reason is the package will fail auto-install without the ```--nodeps``` flag.
 
-The ```-U``` flag to ```rpm``` installs the newly package, otherwise upgrades the installed package. Periodically, obtain the current stable release and run the ```rpm``` command.
+The ```-U``` flag to ```rpm``` installs the newly package, otherwise upgrades the installed package. Periodically, obtain the current stable release and run the ```rpm``` command as shown.
 
 ```bash
 $ sudo mkdir -p /etc/default && sudo touch /etc/default/vivaldi
@@ -352,7 +352,7 @@ $ cp ~/Downloads/ffmpeg-on-clear-linux/desktop/vivaldi-stable.desktop \
        ~/.local/share/applications/.
 ```
 
-**Run**
+**Running**
 
 On first launch, go into ```Settings -> Webpages -> Fonts -> Default Fonts``` and change the default fonts. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```. Optionally, go into ```Settings -> Webpages``` and uncheck "Use Hardware Acceleration When Available". This may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
@@ -372,7 +372,7 @@ The ```RPM``` file for Brave can be found at [sourceforge.net](https://sourcefor
 
 **Note:** Installing Brave will add the Brave repository so your system will automatically keep Brave up to date. If you don't want Brave's repository (which is what we want), do ```sudo touch /etc/default/brave-browser``` before installing the package. The reason is the package will fail auto-install without the ```--nodeps``` flag.
 
-The ```-U``` flag to ```rpm``` installs the newly package, otherwise upgrades the installed package. Periodically, obtain the current stable release and run the ```rpm``` command.
+The ```-U``` flag to ```rpm``` installs the newly package, otherwise upgrades the installed package. Periodically, obtain the current stable release and run the ```rpm``` command as shown.
 
 ```bash
 $ sudo mkdir -p /etc/default && sudo touch /etc/default/brave-browser
@@ -394,7 +394,7 @@ $ cp ~/Downloads/ffmpeg-on-clear-linux/desktop/brave-browser.desktop \
        ~/.local/share/applications/.
 ```
 
-**Run**
+**Running**
 
 On first launch, go into ```Settings -> Appearance -> Customize fonts``` and change the fonts. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```. Optionally, go into ```Settings -> Additional settings -> System``` and disable "Use hardware acceleration when available". Like with other Chromium-based browsers, this may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
