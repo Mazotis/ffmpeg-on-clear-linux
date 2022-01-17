@@ -288,10 +288,14 @@ The ```-U``` flag to ```rpm``` installs newly package, otherwise upgrades the in
 
 ```bash
 $ sudo mkdir -p /etc/default && sudo touch /etc/default/google-chrome
+
 # install package from Google
-$ sudo rpm -Uvh --nodeps ~/Downloads/google-chrome-stable_current_x86_64.rpm 2>/dev/null
+$ sudo rpm -Uvh --nodeps \
+    ~/Downloads/google-chrome-stable_current_x86_64.rpm 2>/dev/null
+
 # (or) install package from pkgs.org, change version accordingly
-$ sudo rpm -Uvh --nodeps ~/Downloads/google-chrome-stable-97.0.4692.71-1.x86_64.rpm 2>/dev/null
+$ sudo rpm -Uvh --nodeps \
+    ~/Downloads/google-chrome-stable-97.0.4692.71-1.x86_64.rpm 2>/dev/null
 ```
 
 **Edit ~/bin/run-chrome-stable**
@@ -303,7 +307,7 @@ $ mkdir -p ~/bin && mkdir -p ~/.local/share/applications
 
 $ cp ~/Downloads/ffmpeg-on-clear-linux/bin/run-chrome-stable ~/bin/.
 $ cp ~/Downloads/ffmpeg-on-clear-linux/desktop/google-chrome.desktop \
-     ~/.local/share/applications/.
+       ~/.local/share/applications/.
 ```
 
 **Run**
@@ -329,7 +333,8 @@ The ```RPM``` file for Vivaldi can be found at [Vivaldi](https://vivaldi.com/dow
 ```bash
 $ sudo mkdir -p /etc/default && sudo touch /etc/default/vivaldi
 # install package, change version accordingly
-$ sudo rpm -Uvh --nodeps ~/Downloads/vivaldi-stable-5.0.2497.38-1.x86_64.rpm 2>/dev/null
+$ sudo rpm -Uvh --nodeps \
+    ~/Downloads/vivaldi-stable-5.0.2497.38-1.x86_64.rpm 2>/dev/null
 ```
 
 **Edit ~/bin/run-vivaldi-stable**
@@ -341,7 +346,7 @@ $ mkdir -p ~/bin && mkdir -p ~/.local/share/applications
 
 $ cp ~/Downloads/ffmpeg-on-clear-linux/bin/run-vivaldi-stable ~/bin/.
 $ cp ~/Downloads/ffmpeg-on-clear-linux/desktop/vivaldi-stable.desktop \
-     ~/.local/share/applications/.
+       ~/.local/share/applications/.
 ```
 
 **Run**
@@ -367,7 +372,8 @@ The ```RPM``` file for Brave can be found at [sourceforge.net](https://sourcefor
 ```bash
 $ sudo mkdir -p /etc/default && sudo touch /etc/default/brave-browser
 # install package, change version accordingly
-$ sudo rpm -Uvh --nodeps ~/Downloads/brave-browser-1.34.80-1.x86_64.rpm 2>/dev/null
+$ sudo rpm -Uvh --nodeps \
+    ~/Downloads/brave-browser-1.34.80-1.x86_64.rpm 2>/dev/null
 ```
 
 **Edit ~/bin/run-brave-stable**
@@ -379,7 +385,7 @@ $ mkdir -p ~/bin && mkdir -p ~/.local/share/applications
 
 $ cp ~/Downloads/ffmpeg-on-clear-linux/bin/run-brave-stable ~/bin/.
 $ cp ~/Downloads/ffmpeg-on-clear-linux/desktop/brave-browser.desktop \
-     ~/.local/share/applications/.
+       ~/.local/share/applications/.
 ```
 
 **Run**
@@ -408,20 +414,23 @@ $ ldd /opt/vivaldi/vivaldi-bin 2>/dev/null | grep "not found$"
 Hackiness aside, a benefit of using a RPM file for installation is that the package can be uninstalled easily. Optionally remove your browser data and settings. Though, be sure to export your bookmarks.
 
 ```bash
-$ sudo rpm -e brave-browser 2>/dev/null && sudo rm -f /etc/default/brave-browser
+$ sudo rpm -e brave-browser 2>/dev/null
+$ sudo rm -f /etc/default/brave-browser
 $ rm -f ~/.local/share/applications/brave-browser.desktop
 $ rm -fr ~/.cache/BraveSoftware/Brave-Browser
-$ rm -fr ~/.config/BraveSoftware/Brave-Browser (optional)
+$ rm -fr ~/.config/BraveSoftware/Brave-Browser  (optional)
 
-$ sudo rpm -e google-chrome-stable 2>/dev/null && sudo rm -f /etc/default/google-chrome
+$ sudo rpm -e google-chrome-stable 2>/dev/null
+$ sudo rm -f /etc/default/google-chrome
 $ rm -f ~/.local/share/applications/google-chrome.desktop
 $ rm -fr ~/.cache/google-chrome
-$ rm -fr ~/.config/google-chrome (optional)
+$ rm -fr ~/.config/google-chrome  (optional)
 
-$ sudo rpm -e vivaldi-stable 2>/dev/null && sudo rm -f /etc/default/vivaldi
+$ sudo rpm -e vivaldi-stable 2>/dev/null
+$ sudo rm -f /etc/default/vivaldi
 $ rm -f ~/.local/share/applications/vivaldi-stable.desktop
 $ rm -fr ~/.cache/vivaldi
-$ rm -fr ~/.config/vivaldi (optional)
+$ rm -fr ~/.config/vivaldi  (optional)
 ```
 
 ## How can I make sure hardware acceleration is working?
