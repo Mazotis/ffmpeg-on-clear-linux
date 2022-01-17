@@ -150,6 +150,7 @@ if [[ -d /opt/nvidia/lib64 && -f $LIBVA_DRIVERS_PATH/nvidia_drv_video.so ]]
 then
     export LD_LIBRARY_PATH="/opt/nvidia/lib64:$LD_LIBRARY_PATH"
     export LIBVA_DRIVER_NAME=nvidia
+    export VDPAU_DRIVER=nvidia
 fi
 
 if [[ $XDG_SESSION_TYPE == wayland ]]
@@ -244,6 +245,7 @@ if [[ -d /opt/nvidia/lib64 && -f $LIBVA_DRIVERS_PATH/nvidia_drv_video.so ]]
 then
     export LD_LIBRARY_PATH="/opt/nvidia/lib64:$LD_LIBRARY_PATH"
     export LIBVA_DRIVER_NAME=nvidia
+    export VDPAU_DRIVER=nvidia
 fi
 
 WINDOW_WIDTH=1100
