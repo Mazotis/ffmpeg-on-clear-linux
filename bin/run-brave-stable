@@ -26,18 +26,7 @@ then
     export VDPAU_DRIVER=nvidia
 fi
 
-WINDOW_WIDTH=1100
-WINDOW_HEIGHT=900
-
-if [ $XDG_SESSION_TYPE == wayland ]
-then
-    exec "$EXECCMD" --window-size=$WINDOW_WIDTH,$WINDOW_HEIGHT \
-        --disable-accelerated-2d-canvas --enable-smooth-scrolling \
-        --use-gl=egl --enable-features=VaapiVideoDecoder $* &> /dev/null &
-elif [ $XDG_SESSION_TYPE == x11 ]
-then
-    exec "$EXECCMD" --window-size=$WINDOW_WIDTH,$WINDOW_HEIGHT \
-        --disable-accelerated-2d-canvas --enable-smooth-scrolling \
-        --use-gl=desktop --enable-features=VaapiVideoDecoder $* &> /dev/null &
-fi
+exec "$EXECCMD" --window-size=1100,900 \
+    --disable-accelerated-2d-canvas --enable-smooth-scrolling \
+    --enable-features=VaapiVideoDecoder $* &> /dev/null &
 

@@ -153,10 +153,6 @@ then
     # libva doesn't yet know which driver to load for the nvidia-drm driver
     # this forces libva to load the nvidia backend
     export LIBVA_DRIVER_NAME=nvidia
-
-    # Add VDPAU or NVDEC hardware decoding support on Linux
-    # https://bugzilla.mozilla.org/show_bug.cgi?id=1210729
-    # export VDPAU_DRIVER=nvidia
 fi
 
 if [[ $XDG_SESSION_TYPE == wayland ]]
@@ -239,7 +235,7 @@ Scroll down towards the end of the file. Update the value for ```LIBVA_DRIVER_NA
 
 Opening new windows may be larger then the initial window. After a while, that can be annoying. The extra ```--window-size=x,y``` flag resolves this issue. Adjust the width and height (in pixels) to your liking. 2D canvas is configured to software only via a flag. Change to ```--enable-accelerated-2d-canvas``` for accelerated 2D canvas.
 
-Decoding videos using hardware acceleration requires the ```--enable-features=VaapiVideoDecoder``` flag. In addition the ```--use-gl=egl``` or ```--use-gl=desktop``` flag is needed depending on runninng ```wayland``` or ```x11```. See [wiki](https://wiki.archlinux.org/title/Chromium) at Arch Linux for optional flags.
+The ```--enable-features=VaapiVideoDecoder``` option decodes videos using hardware acceleration.
 
 ```bash
 # Launch browser.
@@ -259,22 +255,10 @@ then
     export VDPAU_DRIVER=nvidia
 fi
 
-WINDOW_WIDTH=1100
-WINDOW_HEIGHT=900
-
-if [[ $XDG_SESSION_TYPE == wayland ]]
-then
-    exec "$EXECCMD" --window-size=$WINDOW_WIDTH,$WINDOW_HEIGHT \
-        --disable-accelerated-2d-canvas --enable-smooth-scrolling \
-        --use-gl=egl --enable-features=VaapiVideoDecoder \
-        --user-data-dir="$DATADIR" $* &> /dev/null &
-elif [[ $XDG_SESSION_TYPE == x11 ]]
-then
-    exec "$EXECCMD" --window-size=$WINDOW_WIDTH,$WINDOW_HEIGHT \
-        --disable-accelerated-2d-canvas --enable-smooth-scrolling \
-        --use-gl=desktop --enable-features=VaapiVideoDecoder \
-        --user-data-dir="$DATADIR" $* &> /dev/null &
-fi
+exec "$EXECCMD" --window-size=1100,900 \
+    --disable-accelerated-2d-canvas --enable-smooth-scrolling \
+    --enable-features=VaapiVideoDecoder \
+    --user-data-dir="$DATADIR" $* &> /dev/null &
 ```
 
 **Running**
