@@ -149,7 +149,6 @@ export LIBVA_DRIVER_NAME=auto
 if [[ -d /opt/nvidia/lib64 && -f $LIBVA_DRIVERS_PATH/nvidia_drv_video.so ]]
 then
     export LD_LIBRARY_PATH="/opt/nvidia/lib64:$LD_LIBRARY_PATH"
-
     # libva doesn't yet know which driver to load for the nvidia-drm driver
     # this forces libva to load the nvidia backend
     export LIBVA_DRIVER_NAME=nvidia
