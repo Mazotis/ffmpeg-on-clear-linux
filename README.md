@@ -157,8 +157,7 @@ fi
 if [[ $XDG_SESSION_TYPE == wayland ]]
 then
     export MOZ_ENABLE_WAYLAND=1
-elif [[ $XDG_SESSION_TYPE == x11 ]]
-then
+else
     export MOZ_DISABLE_WAYLAND=1
     export MOZ_X11_EGL=1
 fi
@@ -232,9 +231,9 @@ $ cp ~/Downloads/ffmpeg-on-clear-linux/bin/run-chromium-latest ~/bin/.
 
 Scroll down towards the end of the file. Update the value for ```LIBVA_DRIVER_NAME``` or leave it ```auto```. The driver name is overridden automatically for NVIDIA hardware.
 
-Opening new windows may be larger then the initial window. After a while, that can be annoying. The extra ```--window-size=x,y``` flag resolves this issue. Adjust the width and height (in pixels) to your liking. 2D canvas is configured to software only via a flag. Change to ```--enable-accelerated-2d-canvas``` for accelerated 2D canvas.
+Opening new windows may be larger then the initial window. After a while, that can be annoying. The extra ```--window-size=x,y``` flag resolves this issue. Optionally, adjust the width and height (in pixels). 2D canvas is configured to software only via a flag. Change to ```--enable-accelerated-2d-canvas``` for accelerated 2D canvas.
 
-The ```--enable-features=VaapiVideoDecoder``` option decodes videos using hardware acceleration.
+Necessary is the ```--use-gl``` option. Omitting it may cause [MotionMark](https://browserbench.org/MotionMark1.2) to stall. The ```--enable-features=VaapiVideoDecoder``` option enables hardware acceleration when watching a video.
 
 ```bash
 # Launch browser.
@@ -254,10 +253,21 @@ then
     export VDPAU_DRIVER=nvidia
 fi
 
-exec "$EXECCMD" --window-size=1100,900 \
-    --disable-accelerated-2d-canvas --enable-smooth-scrolling \
-    --enable-features=VaapiVideoDecoder \
-    --user-data-dir="$DATADIR" $* &> /dev/null &
+WIDTH=1100
+HEIGHT=900
+
+if [[ $XDG_SESSION_TYPE == wayland ]]
+then
+    exec "$EXECCMD" --window-size=WIDTH,HEIGHT \
+        --disable-accelerated-2d-canvas --enable-smooth-scrolling \
+        --use-gl=egl --enable-features=VaapiVideoDecoder \
+        --user-data-dir="$DATADIR" $* &> /dev/null &
+else
+    exec "$EXECCMD" --window-size=WIDTH,HEIGHT \
+        --disable-accelerated-2d-canvas --enable-smooth-scrolling \
+        --use-gl=desktop --enable-features=VaapiVideoDecoder \
+        --user-data-dir="$DATADIR" $* &> /dev/null &
+fi
 ```
 
 **Running**
