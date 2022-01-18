@@ -258,12 +258,12 @@ HEIGHT=900
 
 if [[ $XDG_SESSION_TYPE == wayland ]]
 then
-    exec "$EXECCMD" --window-size=WIDTH,HEIGHT \
+    exec "$EXECCMD" --window-size=$WIDTH,$HEIGHT \
         --disable-accelerated-2d-canvas --enable-smooth-scrolling \
         --use-gl=egl --enable-features=VaapiVideoDecoder \
         --user-data-dir="$DATADIR" $* &> /dev/null &
 else
-    exec "$EXECCMD" --window-size=WIDTH,HEIGHT \
+    exec "$EXECCMD" --window-size=$WIDTH,$HEIGHT \
         --disable-accelerated-2d-canvas --enable-smooth-scrolling \
         --use-gl=desktop --enable-features=VaapiVideoDecoder \
         --user-data-dir="$DATADIR" $* &> /dev/null &
