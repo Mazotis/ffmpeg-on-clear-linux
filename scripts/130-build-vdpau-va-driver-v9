@@ -20,7 +20,7 @@ tar xzf ${name}.tar.gz
 
 if [[ -d ${name} ]]; then
     cd ${name}
-    # support /opt/nvidia/{lib64,lib} in the event installation not consistent
+    # add /opt/nvidia/{lib64,lib} in the event installation inconsistent
     LDFLAGS="-L/opt/nvidia/lib64 -L/opt/nvidia/lib -L/usr/local/lib" \
         ./autogen.sh --prefix=/usr --enable-glx && \
     make -j 4 && make install && \

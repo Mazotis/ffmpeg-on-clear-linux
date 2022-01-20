@@ -30,7 +30,7 @@ if [[ -d ${name} ]]; then
         exit 1
     fi
 
-    # support /opt/nvidia/{lib64,lib} in the event installation not consistent
+    # check /opt/nvidia/{lib64,lib} in the event installation inconsistent
     if [[ -f /opt/nvidia/lib64/libGL.so ]]; then
         ldflags="-Wl,-rpath=/usr/local/lib:/opt/nvidia/lib64:/usr/local/cuda/lib64 -flto -fuse-linker-plugin"
     else
