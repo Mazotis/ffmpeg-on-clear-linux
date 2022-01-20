@@ -4,6 +4,7 @@ Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) incl
 
 * [What's included](#whats-included)
 * [Requirements](#requirements)
+* [Initial preparation](#initial-preparation)
 * [Building and installation](#building-and-installation)
 * [Multiple libs in x264 and x265](#multiple-libs-in-x264-and-x265)
 * [Determining the VA-API driver to use](#determining-the-va-api-driver-to-use)
@@ -55,9 +56,28 @@ Section "Device"
 EndSection
 ```
 
+## Initial preparation
+
+This section is for folks using the NVIDIA proprietary driver. The ```swupd``` tool is not yet mindful of the NVIDIA proprietary installation. Therefore, install three FFmpeg dependencies early. These packages restore the Mesa GL libraries.
+
+```bash
+$ sudo bundle-add devpkg-libva devpkg-mediasdk devpkg-mesa
+```
+
+Now remove the Mesa GL libaries that shouldn't be there. Copy and paste the code block into a terminal including the surrounding ```if``` statement.
+
+```bash
+if [[ -f /opt/nvidia/lib/libGL.so || -f /opt/nvidia/lib64/libGL.so ]]; then
+    sudo rm -f /usr/lib32/libEGL.so*       /usr/lib64/libEGL.so*
+    sudo rm -f /usr/lib32/libGLESv1_CM.so* /usr/lib64/libGLESv1_CM.so*
+    sudo rm -f /usr/lib32/libGLESv2.so*    /usr/lib64/libGLESv2.so*
+    sudo rm -f /usr/lib32/libGL.so*        /usr/lib64/libGL.so*
+fi
+```
+
 ## Building and installation
 
-The build and installation is a one-step process.
+The build and installation process for FFmpeg can be done in one step.
 
 ```bash
 $ sudo bash build-all
