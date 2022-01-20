@@ -16,7 +16,7 @@ export LIBVA_DRIVER_NAME=auto
 
 if [[ -d /opt/nvidia && -f $LIBVA_DRIVERS_PATH/nvidia_drv_video.so ]]
 then
-    # add /opt/nvidia/{lib64,lib} in the event installation inconsistent
+    # add /opt/nvidia/{lib64,lib} to path
     export LD_LIBRARY_PATH="/opt/nvidia/lib64:/opt/nvidia/lib"
 
     # libva doesn't yet know which driver to load for the nvidia-drm driver
