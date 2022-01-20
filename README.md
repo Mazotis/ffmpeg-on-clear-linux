@@ -167,9 +167,11 @@ export LD_LIBRARY_PATH=/usr/local/lib
 export LIBVA_DRIVERS_PATH=/usr/lib64/dri
 export LIBVA_DRIVER_NAME=auto
 
-if [[ -d /opt/nvidia/lib64 && -f $LIBVA_DRIVERS_PATH/nvidia_drv_video.so ]]
+if [[ -d /opt/nvidia && -f $LIBVA_DRIVERS_PATH/nvidia_drv_video.so ]]
 then
-    export LD_LIBRARY_PATH="/opt/nvidia/lib64:$LD_LIBRARY_PATH"
+    # support /opt/nvidia/{lib64,lib} in the event installation not consistent
+    export LD_LIBRARY_PATH="/opt/nvidia/lib64:/opt/nvidia/lib:$LD_LIBRARY_PATH"
+
     # libva doesn't yet know which driver to load for the nvidia-drm driver
     # this forces libva to load the nvidia backend
     export LIBVA_DRIVER_NAME=nvidia
@@ -264,9 +266,10 @@ export FONTCONFIG_PATH=/usr/share/defaults/fonts
 export LIBVA_DRIVERS_PATH=/usr/lib64/dri
 export LIBVA_DRIVER_NAME=auto
 
-if [[ -d /opt/nvidia/lib64 && -f $LIBVA_DRIVERS_PATH/nvidia_drv_video.so ]]
+if [[ -d /opt/nvidia && -f $LIBVA_DRIVERS_PATH/nvidia_drv_video.so ]]
 then
-    export LD_LIBRARY_PATH="/opt/nvidia/lib64:$LD_LIBRARY_PATH"
+    # support /opt/nvidia/{lib64,lib} in the event installation not consistent
+    export LD_LIBRARY_PATH="/opt/nvidia/lib64:/opt/nvidia/lib"
 
     # libva doesn't yet know which driver to load for the nvidia-drm driver
     # this forces libva to load the nvidia backend

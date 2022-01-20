@@ -20,7 +20,12 @@ else
 fi
 
 if [[ -d ${name} ]]; then
-    ldflags="-Wl,-rpath=/usr/local/lib:/opt/nvidia/lib64 -flto -fuse-linker-plugin"
+    # support /opt/nvidia/{lib64,lib} in the event installation not consistent
+    if [[ -f /opt/nvidia/lib64/libGL.so ]]; then
+        ldflags="-Wl,-rpath=/usr/local/lib:/opt/nvidia/lib64 -flto -fuse-linker-plugin"
+    else
+        ldflags="-Wl,-rpath=/usr/local/lib:/opt/nvidia/lib -flto -fuse-linker-plugin"
+    fi
 
     export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
     export LD_LIBRARY_PATH=/usr/local/lib
@@ -37,7 +42,7 @@ if [[ -d ${name} ]]; then
     ./configure \
         --prefix=/usr/local \
         --extra-cflags="-I/usr/local/include" \
-        --extra-ldflags="-L/usr/local/lib -L/opt/nvidia/lib64 ${ldflags}" \
+        --extra-ldflags="-L/usr/local/lib -L/opt/nvidia/lib64 -L/opt/nvidia/lib ${ldflags}" \
         --extra-libs="-lpthread -lm" --ar=gcc-ar \
         --enable-hardcoded-tables --arch=x86_64 --enable-x86asm \
         --disable-podpages --disable-static --enable-shared --enable-pthreads \

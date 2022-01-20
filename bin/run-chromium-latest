@@ -5,7 +5,7 @@ BASEDIR="$HOME/chromium-latest-linux"
 DATADIR="$BASEDIR/user-data-dir"
 EXECCMD="$BASEDIR/latest/chrome"
 
-if [ ! -x "$EXECCMD" ]
+if [[ ! -x "$EXECCMD" ]]
 then
     echo "ERROR: cannot access '$EXECCMD': No such executable"
     exit 1
@@ -20,7 +20,7 @@ export GOOGLE_DEFAULT_CLIENT_SECRET=no
 APPSDIR="$HOME/.local/share/applications"
 XDGICMD="/usr/bin/xdg-icon-resource"
 
-if [ ! -f "$APPSDIR/chromium-latest.desktop" ]
+if [[ ! -f "$APPSDIR/chromium-latest.desktop" ]]
 then
     $XDGICMD install --size 48 "$BASEDIR/latest/product_logo_48.png" "chromium-latest"
     mkdir -p "$APPSDIR"
@@ -46,9 +46,10 @@ export FONTCONFIG_PATH=/usr/share/defaults/fonts
 export LIBVA_DRIVERS_PATH=/usr/lib64/dri
 export LIBVA_DRIVER_NAME=auto
 
-if [ -d /opt/nvidia/lib64 ] && [ -f $LIBVA_DRIVERS_PATH/nvidia_drv_video.so ]
+if [[ -d /opt/nvidia && -f $LIBVA_DRIVERS_PATH/nvidia_drv_video.so ]]
 then
-    export LD_LIBRARY_PATH="/opt/nvidia/lib64:$LD_LIBRARY_PATH"
+    # support /opt/nvidia/{lib64,lib} in the event installation not consistent
+    export LD_LIBRARY_PATH="/opt/nvidia/lib64:/opt/nvidia/lib"
 
     # libva doesn't yet know which driver to load for the nvidia-drm driver
     # this forces libva to load the nvidia backend
