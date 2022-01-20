@@ -33,7 +33,7 @@ scripts    Contains individual build-install scripts.
 
 ## Requirements
 
-Although testing was done using a NVIDIA GPU, the Intel(R) Media SDK is included during the build process. For NVIDIA GPUs, this requires the proprietary driver to be installed under ```/opt/nvidia```. Optionally install CUDA for extra hardware acceleration capabilities. See installation guides [NVIDIA Drivers](https://docs.01.org/clearlinux/latest/tutorials/nvidia.html) and [NVIDIA CUDA Toolkit](https://docs.01.org/clearlinux/latest/tutorials/nvidia-cuda.html) at Clear Linux.
+Although testing was done using a NVIDIA GPU, the Intel(R) Media SDK is included during the build process. For NVIDIA graphics, this requires the proprietary driver to be installed under ```/opt/nvidia```. Optionally install CUDA for extra hardware acceleration capabilities. See installation guides [NVIDIA Drivers](https://docs.01.org/clearlinux/latest/tutorials/nvidia.html) and [NVIDIA CUDA Toolkit](https://docs.01.org/clearlinux/latest/tutorials/nvidia-cuda.html) at Clear Linux.
 
 Set your GPU's [compute capability](https://en.wikipedia.org/wiki/CUDA) in ```localenv```. The file resides at the top-level and is ignored by Git. For example, the GeForce GTX 1660 model supports max ```7.5``` compute capability. Omit this step is using a non-NVIDIA GPU.
 
@@ -50,7 +50,8 @@ Section "Device"
     Driver        "nvidia"
     VendorName    "NVIDIA Corporation"
     BoardName     "GeForce MODEL_STRING"
-    Option        "ForceCompositionPipeline" "True"
+    Option        "ForceCompositionPipeline" "On"
+    Option        "ForceFullCompositionPipeline" "On"
 EndSection
 ```
 
@@ -178,9 +179,11 @@ gfx.webrender.all                              true
 gfx.webrender.enabled                          true
 
 Enable software render if you want to render on the CPU instead of GPU.
-This is helpful if you prefer the desktop to remain fluid while watching
-a video, which the GPU is handling along with desktop composition.
-gfx.webrender.software                         true
+This is helpful for NVIDIA graphics if you prefer the desktop to remain
+fluid while watching a video, which the GPU is handling along with
+desktop composition. For Intel graphics, leave this setting false
+since webrender on the GPU is needed to decode videos in hardware.
+gfx.webrender.software                         false
 
 Do not add xrender if missing or set to false or click on the trash icon.
 This is a legacy setting that shouldn't be used as it disables WebRender.
@@ -231,9 +234,9 @@ $ cp ~/Downloads/ffmpeg-on-clear-linux/bin/run-chromium-latest ~/bin/.
 
 Scroll down towards the end of the file. Update the value for ```LIBVA_DRIVER_NAME``` or leave it ```auto```. The driver name is overridden automatically for NVIDIA hardware.
 
-Opening new windows may be larger then the initial window. After a while, that can be annoying. The extra ```--window-size=x,y``` flag resolves this issue. Optionally, adjust the width and height (in pixels). 2D canvas is configured to software only via a flag. Change to ```--enable-accelerated-2d-canvas``` for accelerated 2D canvas.
+Opening new windows may be larger then the initial window. After a while, that can be annoying. The ```--window-size=x,y``` option resolves this issue. Optionally adjust the width and height (in pixels) appropiate for your display.
 
-Necessary is the ```--use-gl``` option. Omitting it may cause [MotionMark](https://browserbench.org/MotionMark1.2) to stall. The ```--enable-features=VaapiVideoDecoder``` option enables hardware acceleration when watching a video.
+Intel graphics require accelerated 2D canvas in order to decode videos on the GPU. For NVIDIA graphics, change to ```--disable-accelerated-2d-canvas``` for better performance. The ```--enable-features=VaapiVideoDecoder``` option along with ```--use-gl``` enable hardware acceleration when watching a video.
 
 ```bash
 # Launch browser.
@@ -253,21 +256,12 @@ then
     export VDPAU_DRIVER=nvidia
 fi
 
-WIDTH=1100
-HEIGHT=900
+if [[ $XDG_SESSION_TYPE == wayland ]]; then GL=egl; else GL=desktop; fi
 
-if [[ $XDG_SESSION_TYPE == wayland ]]
-then
-    exec "$EXECCMD" --window-size=$WIDTH,$HEIGHT \
-        --disable-accelerated-2d-canvas --enable-smooth-scrolling \
-        --use-gl=egl --enable-features=VaapiVideoDecoder \
-        --user-data-dir="$DATADIR" $* &> /dev/null &
-else
-    exec "$EXECCMD" --window-size=$WIDTH,$HEIGHT \
-        --disable-accelerated-2d-canvas --enable-smooth-scrolling \
-        --use-gl=desktop --enable-features=VaapiVideoDecoder \
-        --user-data-dir="$DATADIR" $* &> /dev/null &
-fi
+exec "$EXECCMD" --window-size=1100,900 \
+    --enable-accelerated-2d-canvas --enable-smooth-scrolling \
+    --use-gl=$GL --enable-features=VaapiVideoDecoder \
+    --user-data-dir="$DATADIR" $* &> /dev/null &
 ```
 
 **Running**

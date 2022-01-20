@@ -22,6 +22,7 @@ if [[ -d ${name} ]]; then
     make -j ${cores} && \
     rm -f /usr/local/lib/libxvidcore.so* && \
     make install && \
+    chmod 755 /usr/local/lib/libxvidcore.so && \
     rm -f /usr/local/lib/libxvidcore.a
 fi
 
