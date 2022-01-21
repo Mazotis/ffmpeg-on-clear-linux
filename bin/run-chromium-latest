@@ -59,7 +59,7 @@ then
     export VDPAU_DRIVER=nvidia
 fi
 
-if [[ $XDG_SESSION_TYPE == wayland ]]; then GL=egl; else GL=desktop; fi
+[[ $XDG_SESSION_TYPE == wayland ]] && GL=egl || GL=desktop
 
 exec "$EXECCMD" --window-size=1100,900 \
     --enable-accelerated-2d-canvas --enable-smooth-scrolling \

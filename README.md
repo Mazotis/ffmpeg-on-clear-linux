@@ -34,16 +34,16 @@ scripts    Contains individual build-install scripts.
 
 ## Requirements
 
-Although testing was done using a NVIDIA GPU, the Intel(R) Media SDK is included during the build process. For NVIDIA graphics, this requires the proprietary driver to be installed under ```/opt/nvidia```. Optionally install CUDA for extra hardware acceleration capabilities. See installation guides [NVIDIA Drivers](https://docs.01.org/clearlinux/latest/tutorials/nvidia.html) and [NVIDIA CUDA Toolkit](https://docs.01.org/clearlinux/latest/tutorials/nvidia-cuda.html) at Clear Linux.
+Although testing was done using a NVIDIA GPU, the Intel(R) Media SDK is included during the build process. For NVIDIA graphics, this requires the proprietary driver to be installed under `/opt/nvidia`. Optionally install CUDA for extra hardware acceleration capabilities. See installation guides [NVIDIA Drivers](https://docs.01.org/clearlinux/latest/tutorials/nvidia.html) and [NVIDIA CUDA Toolkit](https://docs.01.org/clearlinux/latest/tutorials/nvidia-cuda.html) at Clear Linux.
 
-Set your GPU's [compute capability](https://en.wikipedia.org/wiki/CUDA) in ```localenv```. The file resides at the top-level and is ignored by Git. For example, the GeForce GTX 1660 model supports max ```7.5``` compute capability. Omit this step is using a non-NVIDIA GPU.
+Set your GPU's [compute capability](https://en.wikipedia.org/wiki/CUDA) in `localenv`. The file resides at the top-level and is ignored by Git. For example, the GeForce GTX 1660 model supports max `7.5` compute capability. Omit this step is using a non-NVIDIA GPU.
 
 ```text
 cudaarch="compute_75"  # Turing
 cudacode="sm_75"
 ```
 
-Optionally enable ```ForceCompositionPipeline``` for a better desktop experience, especially when moving-resizing a terminal window while playing a video. This can be done at the device level by adding-or-editing a file ```/etc/X11/xorg.conf.d/nvidia-device.conf```. Replace ```MODEL_STRING``` with your actual GPU model (i.e. GTX 1660). Finally reboot for the change to take effect.
+Optionally enable `ForceCompositionPipeline` for a better desktop experience, especially when moving-resizing a terminal window while playing a video. This can be done at the device level by adding-or-editing a file `/etc/X11/xorg.conf.d/nvidia-device.conf`. Replace `MODEL_STRING` with your actual GPU model (i.e. GTX 1660). Finally reboot for the change to take effect.
 
 ```text
 Section "Device"
@@ -58,21 +58,44 @@ EndSection
 
 ## Initial preparation
 
-This section is for folks using the NVIDIA proprietary driver. The ```swupd``` tool is not yet mindful of the NVIDIA proprietary installation. Therefore, install three FFmpeg dependencies early. These packages restore the Mesa GL libraries.
+This section is for folks using the NVIDIA proprietary driver. The `swupd` tool is not yet mindful of the NVIDIA proprietary installation. Create a systemd service unit to overwrite the Clear Linux OS provided libGL files. The service accommodates the NVIDIA 64-bit libs residing in `/opt/nvidia/lib64` or `/opt/nvidia/lib`.
+
+Running `swupd bundle-add devpkg-libva or devpkg-mediasdk or devpkg-mesa` restores the Clear Linux OS provided libGL files which break the NVIDIA installation. The service removes libGL files that shouldn't be there i.e. `libEGL.so*`, `libGLESv1_CM.so*`, `libGLESv2.so*`, and `libGL.so*`.
 
 ```bash
-$ sudo bundle-add devpkg-libva devpkg-mediasdk devpkg-mesa
+$ sudo tee /etc/systemd/system/fix-nvidia-libGL-trigger.service >/dev/null <<'EOF'
+[Unit]
+Description=Fixes libGL symlinks for the NVIDIA proprietary driver
+BindsTo=update-triggers.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sh -c '[ -f /opt/nvidia/lib64/libGL.so.1 ] && lib=lib64 || lib=lib; /usr/bin/ln -sfv /opt/nvidia/$lib/libGL.so.1 /usr/lib/libGL.so.1'
+ExecStart=/usr/bin/sh -c '/usr/bin/rm -fv /usr/lib64/libEGL.so* /usr/lib32/libEGL.so*'
+ExecStart=/usr/bin/sh -c '/usr/bin/rm -fv /usr/lib64/libGLESv1_CM.so* /usr/lib32/libGLESv1_CM.so*'
+ExecStart=/usr/bin/sh -c '/usr/bin/rm -fv /usr/lib64/libGLESv2.so* /usr/lib32/libGLESv2.so*'
+ExecStart=/usr/bin/sh -c '/usr/bin/rm -fv /usr/lib64/libGL.so* /usr/lib32/libGL.so*'
+EOF
 ```
 
-Now remove the Mesa GL libaries that shouldn't be there. Copy and paste the code block into a terminal including the surrounding ```if``` statement.
+Reload the systemd manager configuration to pickup the new serivce.
 
 ```bash
-if [[ -f /opt/nvidia/lib/libGL.so || -f /opt/nvidia/lib64/libGL.so ]]; then
-    sudo rm -f /usr/lib32/libEGL.so*       /usr/lib64/libEGL.so*
-    sudo rm -f /usr/lib32/libGLESv1_CM.so* /usr/lib64/libGLESv1_CM.so*
-    sudo rm -f /usr/lib32/libGLESv2.so*    /usr/lib64/libGLESv2.so*
-    sudo rm -f /usr/lib32/libGL.so*        /usr/lib64/libGL.so*
-fi
+$ sudo systemctl daemon-reload
+```
+
+Add the service as a dependency to the Clear Linux OS updates trigger causing the service to run after every `swupd bundle-add` and `swupd update`.
+
+```bash
+$ sudo systemctl add-wants update-triggers.target fix-nvidia-libGL-trigger.service
+```
+
+Run the service manually and subsequently get the status about the service.
+
+```bash
+$ sudo systemctl start fix-nvidia-libGL-trigger.service
+$ systemctl status fix-nvidia-libGL-trigger.service
+$ journalctl -xeu fix-nvidia-libGL-trigger.service
 ```
 
 ## Building and installation
@@ -83,7 +106,7 @@ The build and installation process for FFmpeg can be done in one step.
 $ sudo bash build-all
 ```
 
-Or become root and run each script individually. Be sure to run ```000-install-dependencies``` first if choosing this path. Various scripts exit silently depending on whether ```/opt/nvidia/bin/nvidia-settings``` or ```/usr/local/cuda/cuda.h``` exists.
+Or become root and run each script individually. Be sure to run `000-install-dependencies` first if choosing this path. Various scripts exit silently depending on whether `/opt/nvidia/bin/nvidia-settings` or `/usr/local/cuda/cuda.h` exists.
 
 ```bash
 $ sudo root
@@ -95,15 +118,15 @@ cd scripts
 ...
 ```
 
-The ```builddir``` (once created) serves as a cache folder. Remove the correspondent ```*.tar.gz``` file(s) to re-fetch or re-clone from the internet.
+The `builddir` (once created) serves as a cache folder. Remove the correspondent `*.tar.gz` file(s) to re-fetch or re-clone from the internet.
 
-I'm hoping that the build process succeeds for you as it does for me. However, I may have a bundle installed that's missing in ```000-install-dependencies```. Please reach out if that's the case. The Media SDK is included in the FFmpeg build for Intel hardware, but not yet tested what else is needed for that platform.
+I'm hoping that the build process succeeds for you as it does for me. However, I may have a bundle installed that's missing in `000-install-dependencies`. Please reach out if that's the case. The Media SDK is included in the FFmpeg build for Intel hardware, but not yet tested what else is needed for that platform.
 
-Remember to add ```/usr/local/bin``` to your ```PATH``` environment variable if not already done, preferably before ```/usr/bin```.
+Remember to add `/usr/local/bin` to your `PATH` environment variable if not already done, preferably before `/usr/bin`.
 
 ## Multiple libs in x264 and x265
 
-The build scripts build each library independently. Below you will find that ```x264``` supports 8-bits and 10-bits output.
+The build scripts build each library independently. Below you will find that `x264` supports 8-bits and 10-bits output.
 
 ```bash
 $ x264 --help | grep "Output bit depth"
@@ -128,7 +151,7 @@ yuv444p12le gbrp12le gray gray10le gray12le
 
 ## Determining the VA-API driver to use
 
-For hardware acceleration to work, the browser may have the driver built-in or you will need a suitable driver, i.e. ```ls /usr/lib64/dri/*_drv_video.so```. To be sure run ```vainfo``` in a terminal window. For AMD try ```LIBVA_DRIVER_NAME=r600 vainfo``` or ```LIBVA_DRIVER_NAME=radeonsi vainfo```. For Intel the ```iHD``` driver is newer. So check first ```LIBVA_DRIVER_NAME=iHD vainfo``` or try ```LIBVA_DRIVER_NAME=i965 vainfo```.
+For hardware acceleration to work, the browser may have the driver built-in or you will need a suitable driver, i.e. `ls /usr/lib64/dri/*_drv_video.so`. To be sure run `vainfo` in a terminal window. For AMD try `LIBVA_DRIVER_NAME=r600 vainfo` or `LIBVA_DRIVER_NAME=radeonsi vainfo`. For Intel the `iHD` driver is newer. So check first `LIBVA_DRIVER_NAME=iHD vainfo` or try `LIBVA_DRIVER_NAME=i965 vainfo`.
 
 Below see captured output for the NVIDIA driver.
 
@@ -158,7 +181,7 @@ vainfo: Supported profile and entrypoints
 
 ## Firefox config file
 
-The following is my Firefox config. Update the value for ```LIBVA_DRIVER_NAME``` or leave it ```auto```. Subsequently, the driver name is overridden automatically for NVIDIA hardware.
+The following is my Firefox config. Update the value for `LIBVA_DRIVER_NAME` or leave it `auto`. Subsequently, the driver name is overridden automatically for NVIDIA hardware.
 
 ```bash
 $ cat ~/.config/firefox.conf
@@ -193,7 +216,7 @@ export MOZ_WEBRENDER=1
 
 ## Firefox settings
 
-Below are the minimum settings applied via ```about:config``` to enable hardware acceleration. The ```media.rdd-ffmpeg.enable``` flag must be enabled for h264ify to work along with VP9. Basically, this allows you to choose to play videos via the h264ify extension or VP9 media by disabling h264ify and enjoy beyond 1080P playback.
+Below are the minimum settings applied via `about:config` to enable hardware acceleration. The `media.rdd-ffmpeg.enable` flag must be enabled for h264ify to work along with VP9. Basically, this allows you to choose to play videos via the h264ify extension or VP9 media by disabling h264ify and enjoy beyond 1080P playback.
 
 ```text
 gfx.canvas.azure.accelerated                   true
@@ -235,7 +258,7 @@ media.navigator.mediadatadecoder_vpx_enabled   true
 
 **Installation**
 
-Change directory to your home directory. The launch script for Chromium will look for the folder here. Run the ```update.sh``` script initially and periodically to fetch the latest snapshot. The other scripts ```update-and-run.sh``` and ```run-chrome.sh``` are not used.
+Change directory to your home directory. The launch script for Chromium will look for the folder here. Run the `update.sh` script initially and periodically to fetch the latest snapshot. The other scripts `update-and-run.sh` and `run-chrome.sh` are not used.
 
 ```bash
 $ pushd $HOME
@@ -247,18 +270,18 @@ $ popd
 
 **Edit ~/bin/run-chromium-latest**
 
-First copy the custom launch script to your ```bin``` folder.
+First copy the custom launch script to your `bin` folder.
 
 ```bash
 $ mkdir -p ~/bin
 $ cp ~/Downloads/ffmpeg-on-clear-linux/bin/run-chromium-latest ~/bin/.
 ```
 
-Scroll down towards the end of the file. Update the value for ```LIBVA_DRIVER_NAME``` or leave it ```auto```. The driver name is overridden automatically for NVIDIA hardware.
+Scroll down towards the end of the file. Update the value for `LIBVA_DRIVER_NAME` or leave it `auto`. The driver name is overridden automatically for NVIDIA hardware.
 
-Opening new windows may be larger then the initial window. After a while, that can be annoying. The ```--window-size=x,y``` option resolves this issue. Optionally adjust the width and height (in pixels) appropiate for your display.
+Opening new windows may be larger then the initial window. After a while, that can be annoying. The `--window-size=x,y` option resolves this issue. Optionally adjust the width and height (in pixels) appropiate for your display.
 
-Intel graphics require accelerated 2D canvas in order to decode videos on the GPU. For NVIDIA graphics, change to ```--disable-accelerated-2d-canvas``` for better performance. The ```--enable-features=VaapiVideoDecoder``` option along with ```--use-gl``` enable hardware acceleration when watching a video.
+Intel graphics require accelerated 2D canvas in order to decode videos on the GPU. For NVIDIA graphics, change to `--disable-accelerated-2d-canvas` for better performance. The `--enable-features=VaapiVideoDecoder` option along with `--use-gl` enable hardware acceleration when watching a video.
 
 ```bash
 # Launch browser.
@@ -279,7 +302,7 @@ then
     export VDPAU_DRIVER=nvidia
 fi
 
-if [[ $XDG_SESSION_TYPE == wayland ]]; then GL=egl; else GL=desktop; fi
+[[ $XDG_SESSION_TYPE == wayland ]] && GL=egl || GL=desktop
 
 exec "$EXECCMD" --window-size=1100,900 \
     --enable-accelerated-2d-canvas --enable-smooth-scrolling \
@@ -289,9 +312,9 @@ exec "$EXECCMD" --window-size=1100,900 \
 
 **Running**
 
-On first launch, go into ```Settings -> Appearance -> Customize fonts``` and change the fonts. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```. Optionally, go into ```Settings -> Advanced -> System``` and disable "Use hardware acceleration when available". This may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
+On first launch, go into `Settings -> Appearance -> Customize fonts` and change the fonts. These look great: Standard font `Noto Sans`, Serif font `Noto Serif`, and Sans-serif font `Noto Sans`. Optionally, go into `Settings -> Advanced -> System` and disable "Use hardware acceleration when available". This may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
-A desktop file is created the first time ran and placed in ```~/.local/share/applications```. You may run Chromium using the command-line or search for "Chromium" in Application Finder. Launching from the desktop will run the same script.
+A desktop file is created the first time ran and placed in `~/.local/share/applications`. You may run Chromium using the command-line or search for "Chromium" in Application Finder. Launching from the desktop will run the same script.
 
 ```bash
 $ ~/bin/run-chromium-latest
@@ -303,11 +326,11 @@ $ ~/bin/run-chromium-latest
 
 **Installation**
 
-The ```RPM``` file for Google Chrome can be found at [Google](https://www.google.com/chrome/) and [pkgs.org](https://pkgs.org/download/google-chrome). At the time of writing, I installed version 97.0.4692.71.
+The `RPM` file for Google Chrome can be found at [Google](https://www.google.com/chrome/) and [pkgs.org](https://pkgs.org/download/google-chrome). At the time of writing, I installed version 97.0.4692.71.
 
-**Note:** Installing Google Chrome will add the Google repository so your system will automatically keep Google Chrome up to date. If you don't want Google's repository (which is what we want), do ```sudo touch /etc/default/google-chrome``` before installing the package. The reason is the package will fail auto-install without the ```--nodeps``` flag.
+**Note:** Installing Google Chrome will add the Google repository so your system will automatically keep Google Chrome up to date. If you don't want Google's repository (which is what we want), do `sudo touch /etc/default/google-chrome` before installing the package. The reason is the package will fail auto-install without the `--nodeps` flag.
 
-The ```-U``` flag to ```rpm``` installs the newly package, otherwise upgrades the installed package. Periodically, obtain the current stable release and run the ```rpm``` command as shown.
+The `-U` flag to `rpm` installs the newly package, otherwise upgrades the installed package. Periodically, obtain the current stable release and run the `rpm` command as shown.
 
 ```bash
 $ sudo mkdir -p /etc/default && sudo touch /etc/default/google-chrome
@@ -323,7 +346,7 @@ $ sudo rpm -Uvh --nodeps \
 
 **Edit ~/bin/run-chrome-stable**
 
-Copy the launch script and corresponding desktop file. Refer to the notes above for editing the script i.e. ```LIBVA_DRIVER_NAME```, et al.
+Copy the launch script and corresponding desktop file. Refer to the notes above for editing the script i.e. `LIBVA_DRIVER_NAME`, et al.
 
 ```bash
 $ mkdir -p ~/bin && mkdir -p ~/.local/share/applications
@@ -335,11 +358,11 @@ $ cp ~/Downloads/ffmpeg-on-clear-linux/desktop/google-chrome.desktop \
 
 **Running**
 
-On first launch (just like with Chromium), you may want to go into ```Settings -> Appearance -> Customize fonts``` and change the fonts. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```. Optionally, go into ```Settings -> Advanced -> System``` and disable "Use hardware acceleration when available". Like with Chromium, this may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
+On first launch (just like with Chromium), you may want to go into `Settings -> Appearance -> Customize fonts` and change the fonts. These look great: Standard font `Noto Sans`, Serif font `Noto Serif`, and Sans-serif font `Noto Sans`. Optionally, go into `Settings -> Advanced -> System` and disable "Use hardware acceleration when available". Like with Chromium, this may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
 Run Chrome using the command-line or search for "Google Chrome" in Application Finder.
 
-```
+```bash
 $ ~/bin/run-chrome-stable
 ```
 
@@ -349,11 +372,11 @@ $ ~/bin/run-chrome-stable
 
 **Installation**
 
-The ```RPM``` file for Vivaldi can be found at [Vivaldi](https://vivaldi.com/download/). At the time of writing, I installed version 5.0.2497.38.
+The `RPM` file for Vivaldi can be found at [Vivaldi](https://vivaldi.com/download/). At the time of writing, I installed version 5.0.2497.38.
 
-**Note:** Installing Vivaldi will add the Vivaldi repository so your system will automatically keep Vivaldi up to date. If you don't want Vivaldi's repository (which is what we want), do ```sudo touch /etc/default/vivaldi``` before installing the package. The reason is the package will fail auto-install without the ```--nodeps``` flag.
+**Note:** Installing Vivaldi will add the Vivaldi repository so your system will automatically keep Vivaldi up to date. If you don't want Vivaldi's repository (which is what we want), do `sudo touch /etc/default/vivaldi` before installing the package. The reason is the package will fail auto-install without the `--nodeps` flag.
 
-The ```-U``` flag to ```rpm``` installs the newly package, otherwise upgrades the installed package. Periodically, obtain the current stable release and run the ```rpm``` command as shown.
+The `-U` flag to `rpm` installs the newly package, otherwise upgrades the installed package. Periodically, obtain the current stable release and run the `rpm` command as shown.
 
 ```bash
 $ sudo mkdir -p /etc/default && sudo touch /etc/default/vivaldi
@@ -365,7 +388,7 @@ $ sudo rpm -Uvh --nodeps \
 
 **Edit ~/bin/run-vivaldi-stable**
 
-Copy the launch script and corresponding desktop file. See Chromium section above for editing the script i.e. ```LIBVA_DRIVER_NAME```, et al.
+Copy the launch script and corresponding desktop file. See Chromium section above for editing the script i.e. `LIBVA_DRIVER_NAME`, et al.
 
 ```bash
 $ mkdir -p ~/bin && mkdir -p ~/.local/share/applications
@@ -377,11 +400,11 @@ $ cp ~/Downloads/ffmpeg-on-clear-linux/desktop/vivaldi-stable.desktop \
 
 **Running**
 
-On first launch, go into ```Settings -> Webpages -> Fonts -> Default Fonts``` and change the default fonts. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```. Optionally, go into ```Settings -> Webpages``` and uncheck "Use Hardware Acceleration When Available". This may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
+On first launch, go into `Settings -> Webpages -> Fonts -> Default Fonts` and change the default fonts. These look great: Standard font `Noto Sans`, Serif font `Noto Serif`, and Sans-serif font `Noto Sans`. Optionally, go into `Settings -> Webpages` and uncheck "Use Hardware Acceleration When Available". This may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
 Run Vivaldi using the command-line or search for "Vivaldi" in Application Finder.
 
-```
+```bash
 $ ~/bin/run-vivaldi-stable
 ```
 
@@ -391,11 +414,11 @@ $ ~/bin/run-vivaldi-stable
 
 **Installation**
 
-The ```RPM``` file for Brave can be found at [sourceforge.net](https://sourceforge.net/projects/brave-browser.mirror/files/). Go to [pkgs.org](https://pkgs.org/download/brave) and scroll to the bottom of the page. It will mention the current release version. At the time of writing, I installed version 1.34.80.
+The `RPM` file for Brave can be found at [sourceforge.net](https://sourceforge.net/projects/brave-browser.mirror/files/). Go to [pkgs.org](https://pkgs.org/download/brave) and scroll to the bottom of the page. It will mention the current release version. At the time of writing, I installed version 1.34.80.
 
-**Note:** Installing Brave will add the Brave repository so your system will automatically keep Brave up to date. If you don't want Brave's repository (which is what we want), do ```sudo touch /etc/default/brave-browser``` before installing the package. The reason is the package will fail auto-install without the ```--nodeps``` flag.
+**Note:** Installing Brave will add the Brave repository so your system will automatically keep Brave up to date. If you don't want Brave's repository (which is what we want), do `sudo touch /etc/default/brave-browser` before installing the package. The reason is the package will fail auto-install without the `--nodeps` flag.
 
-The ```-U``` flag to ```rpm``` installs the newly package, otherwise upgrades the installed package. Periodically, obtain the current stable release and run the ```rpm``` command as shown.
+The `-U` flag to `rpm` installs the newly package, otherwise upgrades the installed package. Periodically, obtain the current stable release and run the `rpm` command as shown.
 
 ```bash
 $ sudo mkdir -p /etc/default && sudo touch /etc/default/brave-browser
@@ -407,7 +430,7 @@ $ sudo rpm -Uvh --nodeps \
 
 **Edit ~/bin/run-brave-stable**
 
-Copy the launch script and corresponding desktop file. See Chromium section above for editing the script i.e. ```LIBVA_DRIVER_NAME```, et al.
+Copy the launch script and corresponding desktop file. See Chromium section above for editing the script i.e. `LIBVA_DRIVER_NAME`, et al.
 
 ```bash
 $ mkdir -p ~/bin && mkdir -p ~/.local/share/applications
@@ -419,19 +442,19 @@ $ cp ~/Downloads/ffmpeg-on-clear-linux/desktop/brave-browser.desktop \
 
 **Running**
 
-On first launch, go into ```Settings -> Appearance -> Customize fonts``` and change the fonts. These look great: Standard font ```Noto Sans```, Serif font ```Noto Serif```, and Sans-serif font ```Noto Sans```. Optionally, go into ```Settings -> Additional settings -> System``` and disable "Use hardware acceleration when available". Like with other Chromium-based browsers, this may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
+On first launch, go into `Settings -> Appearance -> Customize fonts` and change the fonts. These look great: Standard font `Noto Sans`, Serif font `Noto Serif`, and Sans-serif font `Noto Sans`. Optionally, go into `Settings -> Additional settings -> System` and disable "Use hardware acceleration when available". Like with other Chromium-based browsers, this may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
 Run Brave using the command-line or search for "Brave Web Browser" in Application Finder.
 
-```
+```bash
 $ ~/bin/run-brave-stable
 ```
 
 ## Caveat with RPM package installation
 
-It feels hacky in Clear Linux installing a package that was built for another platform such as RedHat. For piece of mind, check for missing library dependencies using the ```ldd``` utility. Ensure nothing is missing in the output. If true, then install missing packages with ```sudo swupd bundle-add PKGNAME```. Run ```sudo swupd search LIBNAME``` if needed.
+It feels hacky in Clear Linux installing a package that was built for another platform such as RedHat. For piece of mind, check for missing library dependencies using the `ldd` utility. Ensure nothing is missing in the output. If true, then install missing packages with `sudo swupd bundle-add PKGNAME`. Run `sudo swupd search LIBNAME` if needed.
 
-Another solution is building from source. This is likely not necessary, although becomes reality if unable to meet library dependencies. Uninstall the browser with ```sudo rpm -e NAME```, given below.
+Another solution is building from source. This is likely not necessary, although becomes reality if unable to meet library dependencies. Uninstall the browser with `sudo rpm -e NAME`, given below.
 
 ```bash
 $ ldd ~/chromium-latest-linux/latest/chrome 2>/dev/null | grep "not found$"
@@ -471,15 +494,15 @@ $ rm -fr ~/.config/vivaldi  (optional)
 
 ## How can I make sure hardware acceleration is working?
 
-In Brave, Chromium, Google Chrome, and Vivaldi, check the ```chrome://gpu``` page. In Firefox, check the ```about::support``` page. Another way is running a utility suited for your hardware while watching a video.
+In Brave, Chromium, Google Chrome, and Vivaldi, check the `chrome://gpu` page. In Firefox, check the `about::support` page. Another way is running a utility suited for your hardware while watching a video.
 
-1. ```watch -n 1 /opt/nvidia/bin/nvidia-smi``` to check if "GPU-Util" percentage goes up
-2. ```sudo intel_gpu_top``` to check if percentage under the "Video" section goes up
-3. ```watch -n 1 sudo intel_gpu_frequency``` to check if the frequency goes up
+1. `watch -n 1 /opt/nvidia/bin/nvidia-smi` to check if "GPU-Util" percentage goes up
+2. `sudo intel_gpu_top` to check if percentage under the "Video" section goes up
+3. `watch -n 1 sudo intel_gpu_frequency` to check if the frequency goes up
 
 ## Watch HDR videos
 
-To play HDR videos, see ```youtube-play``` found in the extras folder.
+To play HDR videos, see `youtube-play` found in the extras folder.
 
 ## See also, advert at Clear Linux and wikis at Arch Linux
 
