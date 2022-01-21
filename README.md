@@ -94,6 +94,7 @@ Run the service manually and subsequently get the status about the service.
 
 ```bash
 $ sudo systemctl start fix-nvidia-libGL-trigger.service
+
 $ systemctl status fix-nvidia-libGL-trigger.service
 $ journalctl -xeu fix-nvidia-libGL-trigger.service
 ```
