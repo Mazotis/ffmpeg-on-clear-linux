@@ -60,7 +60,7 @@ EndSection
 
 This section is for folks using the NVIDIA proprietary driver. The `swupd` tool is not yet mindful of the NVIDIA proprietary installation. Create a systemd service unit to overwrite the Clear Linux OS provided libGL files. The service accommodates the NVIDIA 64-bit libs residing in `/opt/nvidia/lib64` or `/opt/nvidia/lib`.
 
-Running `swupd bundle-add devpkg-libva or devpkg-mediasdk or devpkg-mesa` restores the Clear Linux OS provided libGL files which break the NVIDIA installation. The service removes libGL files that shouldn't be there i.e. `libEGL.so*`, `libGLESv1_CM.so*`, `libGLESv2.so*`, and `libGL.so*`.
+Running `swupd bundle-add devpkg-libva` or `devpkg-mediasdk` or `devpkg-mesa` restores the Clear Linux OS provided libGL files which breaks the NVIDIA installation. The service removes libGL files that shouldn't be there i.e. `libEGL.so*`, `libGLESv1_CM.so*`, `libGLESv2.so*`, and `libGL.so*`.
 
 ```bash
 $ sudo tee /etc/systemd/system/fix-nvidia-libGL-trigger.service >/dev/null <<'EOF'
