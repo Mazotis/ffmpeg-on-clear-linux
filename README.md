@@ -58,7 +58,15 @@ EndSection
 
 ## Initial preparation
 
-This section is for folks using the NVIDIA proprietary driver. The `swupd` tool is not yet mindful of the NVIDIA proprietary installation. Create a systemd service unit to overwrite the Clear Linux OS provided libGL files. The service accommodates the NVIDIA 64-bit libs residing in `/opt/nvidia/lib64` or `/opt/nvidia/lib`.
+This section is for folks using the NVIDIA proprietary driver.
+
+Until CUDA reaches full compatibility with GCC 11.x, install the `c-extras-gcc10` bundle. This applies if `gcc --version` returns 11 or later. A flag will be passed to `nvcc` to use `gcc-10`.
+
+```bash
+$ sudo swupd bundle-add c-extras-gcc10
+```
+
+The `swupd` tool is not yet mindful of the NVIDIA proprietary installation. Create a systemd service unit to overwrite the Clear Linux OS provided libGL files. The service accommodates the NVIDIA 64-bit libs residing in `/opt/nvidia/lib64` or `/opt/nvidia/lib`.
 
 Running `swupd bundle-add devpkg-libva` or `devpkg-mediasdk` or `devpkg-mesa` restores the Clear Linux OS provided libGL files which breaks the NVIDIA installation. The service removes libGL files that shouldn't be there i.e. `libEGL.so*`, `libGLESv1_CM.so*`, `libGLESv2.so*`, and `libGL.so*`.
 

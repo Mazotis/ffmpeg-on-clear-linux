@@ -37,6 +37,11 @@ if [[ -d ${name} ]]; then
         ldflags="-Wl,-rpath=/usr/local/lib:/opt/nvidia/lib:/usr/local/cuda/lib64 -flto -fuse-linker-plugin"
     fi
 
+    # prefer GCC 10 for now, until CUDA is fully compatible with GCC 11
+    if [[ -z "$CC" || "$CC" == "gcc" ]]; then
+        [[ -x /usr/bin/gcc-10 ]] && _CC="--compiler-bindir=gcc-10" || _CC=""
+    fi
+
     export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
     export LD_LIBRARY_PATH=/usr/local/lib
 
@@ -69,7 +74,7 @@ if [[ -d ${name} ]]; then
         --enable-opengl --enable-postproc --enable-sdl2 --enable-vaapi $vdpau \
         --enable-zlib --enable-ffplay --enable-gpl --enable-nonfree \
         --enable-version3 --enable-cuda-nvcc --nvcc=/usr/local/cuda/bin/nvcc \
-        --nvccflags="-gencode arch=${cudaarch},code=${cudacode} -O2 -m64 -ptx" \
+        --nvccflags="$_CC -gencode arch=${cudaarch},code=${cudacode} -O2 -m64 -ptx" \
         --enable-cuvid --enable-nvdec --enable-nvenc --enable-libnpp || exit $?
 
     # The libva-vdpau-driver always assumes the connection type "X11".
