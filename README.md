@@ -290,7 +290,7 @@ Scroll down towards the end of the file. Update the value for `LIBVA_DRIVER_NAME
 
 Opening new windows may be larger then the initial window. After a while, that can be annoying. The `--window-size=x,y` option resolves this issue. Optionally adjust the width and height (in pixels) appropiate for your display.
 
-Intel graphics require accelerated 2D canvas in order to decode videos on the GPU. For NVIDIA graphics, change to `--disable-accelerated-2d-canvas` for better performance. The `--enable-features=VaapiVideoDecoder` option along with `--use-gl` enable hardware acceleration when watching a video.
+Accelerated 2D canvas is required (default enabled) to decode videos on the GPU. Two more options `--use-gl` and `--enable-features=VaapiVideoDecoder` are needed for hardware acceleration to work when watching a video.
 
 ```bash
 # Launch browser.
@@ -321,7 +321,7 @@ exec "$EXECCMD" --window-size=1100,900 \
 
 **Running**
 
-On first launch, go into `Settings -> Appearance -> Customize fonts` and change the fonts. These look great: Standard font `Noto Sans`, Serif font `Noto Serif`, and Sans-serif font `Noto Sans`. Optionally, go into `Settings -> Advanced -> System` and disable "Use hardware acceleration when available". This may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
+On first launch, go into `Settings -> Appearance -> Customize fonts` and change the fonts. For metrically compatible with `Times New Roman`, `Arial`, and `Courier New` set to Standard font `Tinos`, Serif font `Tinos`, Sans-serif font `Arimo`, and Fixed-width font `Cousine`. Optionally, go into `Settings -> Advanced -> System` and disable "Use hardware acceleration when available". This may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
 A desktop file is created the first time ran and placed in `~/.local/share/applications`. You may run Chromium using the command-line or search for "Chromium" in Application Finder. Launching from the desktop will run the same script.
 
@@ -367,7 +367,7 @@ $ cp ~/Downloads/ffmpeg-on-clear-linux/desktop/google-chrome.desktop \
 
 **Running**
 
-On first launch (just like with Chromium), you may want to go into `Settings -> Appearance -> Customize fonts` and change the fonts. These look great: Standard font `Noto Sans`, Serif font `Noto Serif`, and Sans-serif font `Noto Sans`. Optionally, go into `Settings -> Advanced -> System` and disable "Use hardware acceleration when available". Like with Chromium, this may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
+On first launch (just like with Chromium), you may want to go into `Settings -> Appearance -> Customize fonts` and change the fonts. For metrically compatible with `Times New Roman`, `Arial`, and `Courier New` set to Standard font `Tinos`, Serif font `Tinos`, Sans-serif font `Arimo`, and Fixed-width font `Cousine`. Optionally, go into `Settings -> Advanced -> System` and disable "Use hardware acceleration when available". Like with Chromium, this may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
 Run Chrome using the command-line or search for "Google Chrome" in Application Finder.
 
@@ -409,7 +409,7 @@ $ cp ~/Downloads/ffmpeg-on-clear-linux/desktop/vivaldi-stable.desktop \
 
 **Running**
 
-On first launch, go into `Settings -> Webpages -> Fonts -> Default Fonts` and change the default fonts. These look great: Standard font `Noto Sans`, Serif font `Noto Serif`, and Sans-serif font `Noto Sans`. Optionally, go into `Settings -> Webpages` and uncheck "Use Hardware Acceleration When Available". This may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
+On first launch, go into `Settings -> Webpages -> Fonts -> Default Fonts` and change the default fonts. For metrically compatible with `Times New Roman`, `Arial`, and `Courier New` set to Standard `Tinos`, Sans-serif `Arimo`, Serif `Tinos`, and Monospaced `Cousine`. Optionally, go into `Settings -> Webpages` and uncheck "Use Hardware Acceleration When Available". This may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
 Run Vivaldi using the command-line or search for "Vivaldi" in Application Finder.
 
@@ -451,7 +451,7 @@ $ cp ~/Downloads/ffmpeg-on-clear-linux/desktop/brave-browser.desktop \
 
 **Running**
 
-On first launch, go into `Settings -> Appearance -> Customize fonts` and change the fonts. These look great: Standard font `Noto Sans`, Serif font `Noto Serif`, and Sans-serif font `Noto Sans`. Optionally, go into `Settings -> Additional settings -> System` and disable "Use hardware acceleration when available". Like with other Chromium-based browsers, this may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
+On first launch, go into `Settings -> Appearance -> Customize fonts` and change the fonts. For metrically compatible with `Times New Roman`, `Arial`, and `Courier New` set to Standard font `Tinos`, Serif font `Tinos`, Sans-serif font `Arimo`, and Fixed-width font `Cousine`. Optionally, go into `Settings -> Additional settings -> System` and disable "Use hardware acceleration when available". Like with other Chromium-based browsers, this may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
 Run Brave using the command-line or search for "Brave Web Browser" in Application Finder.
 
