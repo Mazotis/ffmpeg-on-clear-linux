@@ -290,7 +290,9 @@ Scroll down towards the end of the file. Update the value for `LIBVA_DRIVER_NAME
 
 Opening new windows may be larger then the initial window. After a while, that can be annoying. The `--window-size=x,y` option resolves this issue. Optionally adjust the width and height (in pixels) appropiate for your display.
 
-Accelerated 2D canvas is required (default enabled) to decode videos on the GPU. Two more options `--use-gl` and `--enable-features=VaapiVideoDecoder` are needed for hardware acceleration to work when watching a video. Hardware acceleration stopped working in Chrome 98. The `--disable-features=UseChromeOSDirectVideoDecoder` option resolves the issue by decoding videos using `VDAVideoDecoder`.
+Accelerated 2D canvas is required (default enabled) to decode videos on the GPU. Two more options `--use-gl` and `--enable-features=VaapiVideoDecoder` are needed for hardware acceleration to work when watching a video. Hardware acceleration stopped working in Google Chrome 98. The `--disable-features=UseChromeOSDirectVideoDecoder` option resolves the issue by decoding videos using VDAVideoDecoder.
+
+Hardware accelerated video decoding applies to Google Chrome, Vivaldi, and Brave browsers.
 
 ```bash
 # Launch browser.
@@ -322,7 +324,7 @@ exec "$EXECCMD" --window-size=1100,900 \
 
 **Running**
 
-On first launch, go into `Settings -> Appearance -> Customize fonts` and change the fonts. For metrically compatible with `Times New Roman`, `Arial`, and `Courier New` set to Standard font `Tinos`, Serif font `Tinos`, Sans-serif font `Arimo`, and Fixed-width font `Cousine`. Optionally, go into `Settings -> Advanced -> System` and disable "Use hardware acceleration when available". This may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
+On first launch go into `Settings -> Appearance -> Customize fonts` and change the fonts. Metrically compatible with `Times New Roman`, `Arial`, and `Courier New` are `Tinos`, `Arimo`, and `Cousine` respectively. Optionally go into `Settings -> Advanced -> System` and disable "Use hardware acceleration when available". This may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
 A desktop file is created the first time ran and placed in `~/.local/share/applications`. You may run Chromium using the command-line or search for "Chromium" in Application Finder. Launching from the desktop will run the same script.
 
@@ -336,7 +338,7 @@ $ ~/bin/run-chromium-latest
 
 **Installation**
 
-The `RPM` file for Google Chrome can be found at [Google](https://www.google.com/chrome/) and [pkgs.org](https://pkgs.org/download/google-chrome). At the time of writing, I installed version 97.0.4692.71.
+The `RPM` file for Google Chrome can be found at [Google](https://www.google.com/chrome/) and [pkgs.org](https://pkgs.org/download/google-chrome). At the time of writing, I installed version 98.0.4758.80.
 
 **Note:** Installing Google Chrome will add the Google repository so your system will automatically keep Google Chrome up to date. If you don't want Google's repository (which is what we want), do `sudo touch /etc/default/google-chrome` before installing the package. The reason is the package will fail auto-install without the `--nodeps` flag.
 
@@ -368,7 +370,7 @@ $ cp ~/Downloads/ffmpeg-on-clear-linux/desktop/google-chrome.desktop \
 
 **Running**
 
-On first launch (just like with Chromium), you may want to go into `Settings -> Appearance -> Customize fonts` and change the fonts. For metrically compatible with `Times New Roman`, `Arial`, and `Courier New` set to Standard font `Tinos`, Serif font `Tinos`, Sans-serif font `Arimo`, and Fixed-width font `Cousine`. Optionally, go into `Settings -> Advanced -> System` and disable "Use hardware acceleration when available". Like with Chromium, this may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
+On first launch (just like with Chromium), you may want to go into `Settings -> Appearance -> Customize fonts` and change the fonts. Metrically compatible with `Times New Roman`, `Arial`, and `Courier New` are `Tinos`, `Arimo`, and `Cousine` respectively. Optionally go into `Settings -> Advanced -> System` and disable "Use hardware acceleration when available". Like with Chromium, this may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
 Run Chrome using the command-line or search for "Google Chrome" in Application Finder.
 
@@ -382,7 +384,7 @@ $ ~/bin/run-chrome-stable
 
 **Installation**
 
-The `RPM` file for Vivaldi can be found at [Vivaldi](https://vivaldi.com/download/). At the time of writing, I installed version 5.0.2497.38.
+The `RPM` file for Vivaldi can be found at [Vivaldi](https://vivaldi.com/download/). At the time of writing, I installed version 5.0.2497.51.
 
 **Note:** Installing Vivaldi will add the Vivaldi repository so your system will automatically keep Vivaldi up to date. If you don't want Vivaldi's repository (which is what we want), do `sudo touch /etc/default/vivaldi` before installing the package. The reason is the package will fail auto-install without the `--nodeps` flag.
 
@@ -410,7 +412,7 @@ $ cp ~/Downloads/ffmpeg-on-clear-linux/desktop/vivaldi-stable.desktop \
 
 **Running**
 
-On first launch, go into `Settings -> Webpages -> Fonts -> Default Fonts` and change the default fonts. For metrically compatible with `Times New Roman`, `Arial`, and `Courier New` set to Standard `Tinos`, Sans-serif `Arimo`, Serif `Tinos`, and Monospaced `Cousine`. Optionally, go into `Settings -> Webpages` and uncheck "Use Hardware Acceleration When Available". This may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
+On first launch go into `Settings -> Webpages -> Fonts -> Default Fonts` and change the default fonts. Metrically compatible with `Times New Roman`, `Arial`, and `Courier New` are `Tinos`, `Arimo`, and `Cousine` respectively. Optionally go into `Settings -> Webpages` and uncheck "Use Hardware Acceleration When Available". This may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
 Run Vivaldi using the command-line or search for "Vivaldi" in Application Finder.
 
@@ -424,7 +426,7 @@ $ ~/bin/run-vivaldi-stable
 
 **Installation**
 
-The `RPM` file for Brave can be found at [sourceforge.net](https://sourceforge.net/projects/brave-browser.mirror/files/). Go to [pkgs.org](https://pkgs.org/download/brave) and scroll to the bottom of the page. It will mention the current release version. At the time of writing, I installed version 1.34.80.
+The `RPM` file for Brave can be found at [sourceforge.net](https://sourceforge.net/projects/brave-browser.mirror/files/). Go to [pkgs.org](https://pkgs.org/download/brave) and scroll to the bottom of the page. It will mention the current release version. At the time of writing, I installed version 1.35.100.
 
 **Note:** Installing Brave will add the Brave repository so your system will automatically keep Brave up to date. If you don't want Brave's repository (which is what we want), do `sudo touch /etc/default/brave-browser` before installing the package. The reason is the package will fail auto-install without the `--nodeps` flag.
 
@@ -452,7 +454,7 @@ $ cp ~/Downloads/ffmpeg-on-clear-linux/desktop/brave-browser.desktop \
 
 **Running**
 
-On first launch, go into `Settings -> Appearance -> Customize fonts` and change the fonts. For metrically compatible with `Times New Roman`, `Arial`, and `Courier New` set to Standard font `Tinos`, Serif font `Tinos`, Sans-serif font `Arimo`, and Fixed-width font `Cousine`. Optionally, go into `Settings -> Additional settings -> System` and disable "Use hardware acceleration when available". Like with other Chromium-based browsers, this may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
+On first launch go into `Settings -> Appearance -> Customize fonts` and change the fonts. Metrically compatible with `Times New Roman`, `Arial`, and `Courier New` are `Tinos`, `Arimo`, and `Cousine` respectively. Optionally go into `Settings -> Additional settings -> System` and disable "Use hardware acceleration when available". Like with other Chromium-based browsers, this may be helpful if the GPU is lacking or you prefer the CPU to decode videos.
 
 Run Brave using the command-line or search for "Brave Web Browser" in Application Finder.
 
