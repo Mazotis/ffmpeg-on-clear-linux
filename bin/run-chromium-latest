@@ -62,6 +62,7 @@ fi
 [[ $XDG_SESSION_TYPE == wayland ]] && GL=egl || GL=desktop
 
 exec "$EXECCMD" --window-size=1100,900 \
+    --disable-features=UseChromeOSDirectVideoDecoder \
     --enable-accelerated-2d-canvas --enable-smooth-scrolling \
     --use-gl=$GL --enable-features=VaapiVideoDecoder \
     --user-data-dir="$DATADIR" $* &> /dev/null &

@@ -290,7 +290,7 @@ Scroll down towards the end of the file. Update the value for `LIBVA_DRIVER_NAME
 
 Opening new windows may be larger then the initial window. After a while, that can be annoying. The `--window-size=x,y` option resolves this issue. Optionally adjust the width and height (in pixels) appropiate for your display.
 
-Accelerated 2D canvas is required (default enabled) to decode videos on the GPU. Two more options `--use-gl` and `--enable-features=VaapiVideoDecoder` are needed for hardware acceleration to work when watching a video.
+Accelerated 2D canvas is required (default enabled) to decode videos on the GPU. Two more options `--use-gl` and `--enable-features=VaapiVideoDecoder` are needed for hardware acceleration to work when watching a video. Hardware acceleration stopped working in Chrome 98. The `--disable-features=UseChromeOSDirectVideoDecoder` option resolves the issue by decoding videos using `VDAVideoDecoder`.
 
 ```bash
 # Launch browser.
@@ -314,6 +314,7 @@ fi
 [[ $XDG_SESSION_TYPE == wayland ]] && GL=egl || GL=desktop
 
 exec "$EXECCMD" --window-size=1100,900 \
+    --disable-features=UseChromeOSDirectVideoDecoder \
     --enable-accelerated-2d-canvas --enable-smooth-scrolling \
     --use-gl=$GL --enable-features=VaapiVideoDecoder \
     --user-data-dir="$DATADIR" $* &> /dev/null &
