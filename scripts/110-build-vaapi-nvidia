@@ -30,7 +30,9 @@ fi
 
 if [[ -d ${name} ]]; then
     mkdir -p ${name}/build && cd ${name}/build
-    LDFLAGS="-L/opt/nvidia/lib/" LIBRARY_PATH="/opt/nvidia/lib" PKG_CONFIG_PATH="/usr/local/lib/pkgconfig" \
+    LDFLAGS="-L/opt/nvidia/lib64 -L/opt/nvidia/lib" \
+    LIBRARY_PATH="/opt/nvidia/lib64:/opt/nvidia/lib" \
+    PKG_CONFIG_PATH="/usr/local/lib/pkgconfig" \
     meson setup .. --prefix=/usr/local --libdir=lib && \
     ninja install
     if [[ $? -eq 0 && ! -f /usr/lib64/dri/nvidia-nvdec_drv_video.so ]]; then
