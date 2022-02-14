@@ -188,6 +188,17 @@ vainfo: Supported profile and entrypoints
       VAProfileVP9Profile0            : VAEntrypointVLD
 ```
 
+## (Optional) Using the NVDEC-enabled Nvidia VA-API driver
+
+The NVDEC-enabled VA-API driver (see the official [Github](https://github.com/elFarto/nvidia-vaapi-driver)) is compiled automatically if your NVIDIA driver version is >470.57, but it is not enabled by default as it is still experimental and mostly tested with firefox. To use it, change the LIBVA_DRIVER_NAME to export LIBVA_DRIVER_NAME=nvidia-nvdec in the following config files.
+Note that this requires adding the following kernel cmdline, or else it won't load.
+
+```bash
+$ sudo tee /etc/kernel/cmdline.d/70-nvidia.conf >/dev/null <<'EOF'
+nvidia-drm.modeset=1
+EOF
+```
+
 ## Firefox config file
 
 The following is my Firefox config. Update the value for `LIBVA_DRIVER_NAME` or leave it `auto`. Subsequently, the driver name is overridden automatically for NVIDIA hardware.

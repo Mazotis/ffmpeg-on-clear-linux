@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Exit silently if the graphics driver is not installed.
+[[ ! -f /opt/nvidia/bin/nvidia-settings ]] && exit 0
+
+version=`/opt/nvidia/bin/nvidia-settings --version | grep version`
+version=${version##* } # extract the version string from the line
+version=`echo $version | cut -d. -f1-2` # want major and minor, not revision
+
+# Exit silently if the the graphics driver does not meet requirement.
+[[ $(bc -l <<< "${version} <= 470.57") -eq 1 ]] && exit 0
+
+name=nvidia-vaapi-driver
+echo "building ${name}"
+echo "WARNING - You need Nvidia drivers > 470.57 installed for this to work"
+echo "Will install a new VAAPI driver called nvidia-nvdec alongside nvidia"
+
+mkdir -p builddir && cd builddir
+rm -fr ${name}
+
+if [[ ! -f ${name}.tar.gz ]]; then
+    url="https://github.com/elFarto/nvidia-vaapi-driver"
+    echo "git clone --depth 1 ${url}"
+    git clone --depth 1 ${url}
+
+    tar czf ${name}.tar.gz ${name}
+else
+    tar xzf ${name}.tar.gz
+fi
+
+if [[ -d ${name} ]]; then
+    mkdir -p ${name}/build && cd ${name}/build
+    LDFLAGS="-L/opt/nvidia/lib/" LIBRARY_PATH="/opt/nvidia/lib" PKG_CONFIG_PATH="/usr/local/lib/pkgconfig" \
+    meson setup .. --prefix=/usr/local --libdir=lib && \
+    ninja install
+    if [[ $? -eq 0 && ! -f /usr/lib64/dri/nvidia-nvdec_drv_video.so ]]; then
+        ln -sf /usr/local/lib64/dri/nvidia_drv_video.so /usr/lib64/dri/nvidia-nvdec_drv_video.so
+    fi
+fi

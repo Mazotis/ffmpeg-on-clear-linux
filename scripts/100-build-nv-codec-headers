@@ -9,7 +9,9 @@ version=`/opt/nvidia/bin/nvidia-settings --version | grep version`
 version=${version##* } # extract the version string from the line
 version=`echo $version | cut -d. -f1-2` # want major and minor, not revision
 
-if   [[ $(bc -l <<< "${version} >= 455.28") -eq 1 ]]; then
+if   [[ $(bc -l <<< "${version} >= 470.57") -eq 1 ]]; then
+    nvver="11.1.5.1"
+elif [[ $(bc -l <<< "${version} >= 455.28") -eq 1 ]]; then
     nvver="11.0.10.0"
 elif [[ $(bc -l <<< "${version} >= 445.87") -eq 1 ]]; then
     nvver="10.0.26.1"
