@@ -34,6 +34,6 @@ if [[ -d ${name} ]]; then
     meson setup .. --prefix=/usr/local --libdir=lib && \
     ninja install
     if [[ $? -eq 0 && ! -f /usr/lib64/dri/nvidia-nvdec_drv_video.so ]]; then
-        ln -sf /usr/local/lib64/dri/nvidia_drv_video.so /usr/lib64/dri/nvidia-nvdec_drv_video.so
+        ln -sf /usr/local/lib/dri/nvidia_drv_video.so /usr/lib64/dri/nvidia-nvdec_drv_video.so
     fi
 fi
