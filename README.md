@@ -8,6 +8,7 @@ Run [FFmpeg](https://ffmpeg.org/) on [Clear Linux](https://clearlinux.org/) incl
 * [Building and installation](#building-and-installation)
 * [Multiple libs in x264 and x265](#multiple-libs-in-x264-and-x265)
 * [Determining the VA-API driver to use](#determining-the-va-api-driver-to-use)
+* [Using the NVIDIA NVDEC-enabled VA-API driver](#using-the-nvidia-nvdec-enabled-va-api-driver)
 * [Firefox config file](#firefox-config-file)
 * [Firefox settings](#firefox-settings)
 * [Chromium installation and configuration](#chromium-installation-and-configuration)
@@ -188,15 +189,48 @@ vainfo: Supported profile and entrypoints
       VAProfileVP9Profile0            : VAEntrypointVLD
 ```
 
-## (Optional) Using the NVDEC-enabled Nvidia VA-API driver
+## Using the NVIDIA NVDEC-enabled VA-API driver
 
-The NVDEC-enabled VA-API driver (see the official [Github](https://github.com/elFarto/nvidia-vaapi-driver)) is compiled automatically if your NVIDIA driver version is >470.57, but it is not enabled by default as it is still experimental and mostly tested with firefox. To use it, change the LIBVA_DRIVER_NAME to export LIBVA_DRIVER_NAME=nvidia-nvdec in the following config files.
-Note that this requires adding the following kernel cmdline, or else it won't load.
+The NVDEC-enabled VA-API driver (see the official [Github](https://github.com/elFarto/nvidia-vaapi-driver)) is compiled automatically if your NVIDIA display driver is greater than 470.57, but it is not enabled by default as it is still experimental. The implementation is specifically designed to be used by Firefox. To use it, change `LIBVA_DRIVERS_PATH` mentioned in the Firefox configuration to point to `/usr/local/lib/dri` first.
 
 ```bash
-$ sudo tee /etc/kernel/cmdline.d/70-nvidia.conf >/dev/null <<'EOF'
-nvidia-drm.modeset=1
+LIBVA_DRIVERS_PATH=/usr/local/lib/dri:/usr/lib64/dri
+```
+
+Note that this requires enabling modeset for the `nvidia-drm` module, or else it won't load. Reboot for the change to take effect.
+
+```bash
+$ sudo mkdir -p /etc/modprobe.d && \
+  sudo tee /etc/modprobe.d/enable-nvidia-modeset.conf >/dev/null <<'EOF'
+options nvidia-drm modeset=1
 EOF
+```
+
+Below see capture output using the NVDEC-enabled driver.
+
+```bash
+$ LIBVA_DRIVERS_PATH=/usr/local/lib/dri LIBVA_DRIVER_NAME=nvidia vainfo
+
+libva info: VA-API version 1.11.0
+libva info: User environment variable requested driver 'nvidia'
+libva info: Trying to open /usr/local/lib/dri/nvidia_drv_video.so
+libva info: Found init function __vaDriverInit_1_0
+libva info: va_openDriver() returns 0
+vainfo: VA-API version: 1.11 (libva 2.11.0)
+vainfo: Driver version: VA-API NVDEC driver
+vainfo: Supported profile and entrypoints
+      VAProfileMPEG2Simple            : VAEntrypointVLD
+      VAProfileMPEG2Main              : VAEntrypointVLD
+      VAProfileVC1Simple              : VAEntrypointVLD
+      VAProfileVC1Main                : VAEntrypointVLD
+      VAProfileVC1Advanced            : VAEntrypointVLD
+      <unknown profile>               : VAEntrypointVLD
+      VAProfileH264Main               : VAEntrypointVLD
+      VAProfileH264High               : VAEntrypointVLD
+      VAProfileH264ConstrainedBaseline: VAEntrypointVLD
+      VAProfileHEVCMain               : VAEntrypointVLD
+      VAProfileVP8Version0_3          : VAEntrypointVLD
+      VAProfileVP9Profile0            : VAEntrypointVLD
 ```
 
 ## Firefox config file
@@ -206,18 +240,30 @@ The following is my Firefox config. Update the value for `LIBVA_DRIVER_NAME` or 
 ```bash
 $ cat ~/.config/firefox.conf
 
+export FONTCONFIG_PATH=/usr/share/defaults/fonts
 export LD_LIBRARY_PATH=/usr/local/lib
-export LIBVA_DRIVERS_PATH=/usr/lib64/dri
+
+export LIBVA_DRIVERS_PATH=/usr/lib64/dri:/usr/local/lib/dri
 export LIBVA_DRIVER_NAME=auto
 
-if [[ -d /opt/nvidia && -f $LIBVA_DRIVERS_PATH/nvidia_drv_video.so ]]
+if [[ -d /opt/nvidia ]]
 then
-    # add /opt/nvidia/{lib64,lib} to path
-    export LD_LIBRARY_PATH="/opt/nvidia/lib64:/opt/nvidia/lib:$LD_LIBRARY_PATH"
+    # vdpau-va-driver-v9 (default VA-API driver)
+    nv_va_path1=/usr/lib64/dri/nvidia_drv_video.so
 
-    # libva doesn't yet know which driver to load for the nvidia-drm driver
-    # this forces libva to load the nvidia backend
-    export LIBVA_DRIVER_NAME=nvidia
+    # nvidia-vaapi-driver (decodes using the NVDEC engine on the GPU)
+    # change LIBVA_DRIVERS_PATH above to /usr/local/lib/dri:/usr/lib64/dri
+    nv_va_path2=/usr/local/lib/dri/nvidia_drv_video.so
+
+    if [[ -f $nv_va_path1 || -f $nv_va_path2 ]]
+    then
+        # add /opt/nvidia/{lib64,lib} to path
+        export LD_LIBRARY_PATH="/opt/nvidia/lib64:/opt/nvidia/lib:$LD_LIBRARY_PATH"
+
+        # libva doesn't yet know which driver to load for the nvidia-drm driver
+        # this forces libva to load the nvidia backend
+        export LIBVA_DRIVER_NAME=nvidia
+    fi
 fi
 
 if [[ $XDG_SESSION_TYPE == wayland ]]
@@ -262,9 +308,14 @@ media.ffmpeg.vaapi-drm-display.enabled         true
 media.ffmpeg.vaapi.enabled                     true
 media.ffvpx.enabled                            false
 
+Enable to help get decoding to work for NVIDIA 470 driver series.
+widget.dmabuf.force-enabled                    true
+
+Verify enabled, necessary for the nvidia-nvdec enabled driver to work.
+media.rdd-process.enabled                      true
+
 media.rdd-ffmpeg.enabled                       true
 media.rdd-ffvpx.enabled                        false
-media.rdd-process.enabled                      false
 media.rdd-vpx.enabled                          false
 media.av1.enabled                              false
 
